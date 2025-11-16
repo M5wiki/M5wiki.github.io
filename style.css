@@ -365,44 +365,39 @@ li {
 /* НОВЫЙ РАЗДЕЛ: УНИКАЛЬНЫЕ СТИЛИ ТОЛЬКО ДЛЯ СТРАНИЦЫ 404      */
 /* ============================================================= */
 
-/* Обертка для всей страницы 404, чтобы центрировать контент по вертикали */
 .error-404-wrapper {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  min-height: 100vh; /* Растягиваем на всю высоту экрана */
+  min-height: 100vh; 
   padding: 20px;
   box-sizing: border-box;
 }
 
-/* Огромный заголовок 404, переопределяет общий стиль h1 */
 .error-404-wrapper h1 {
-  font-size: 120pt; /* Огромный размер */
+  font-size: 120pt; 
   margin: 0;
   line-height: 1.2;
-  padding: 0; /* Сбрасываем стандартный padding от h1 */
+  padding: 0; 
 }
 
-/* Подзаголовок, переопределяет общий стиль .subheading */
 .error-404-wrapper .subheading {
   font-size: 28pt;
   margin: 10px 0 40px 0;
 }
 
-/* Блок с текстом и кнопкой */
 .error-404-wrapper .content {
   font-size: 14pt;
   max-width: 600px;
-  margin: 0 auto; /* Центрируем сам блок */
+  margin: 0 auto; 
 }
 
 .error-404-wrapper .content p {
   margin-bottom: 20px;
 }
 
-/* Кнопка "Вернуться на главную" */
 .error-404-wrapper .home-button {
   display: inline-block;
   padding: 12px 24px;
@@ -420,10 +415,9 @@ li {
   background-color: #ffffff;
   color: #003b6f;
   transform: translateY(-2px);
-  text-decoration: none; /* Убираем подчеркивание от общего стиля a:hover */
+  text-decoration: none; 
 }
 
-/* Серый код ошибки */
 .error-404-wrapper .error-code {
   font-family: monospace;
   font-weight: bold;
