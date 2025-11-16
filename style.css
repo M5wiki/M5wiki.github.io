@@ -1,0 +1,387 @@
+/* === СБРОС СТИЛЕЙ === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* =============================================== */
+/* ОБЩИЕ СТИЛИ САЙТА                              */
+/* =============================================== */
+
+body {
+  background-color: #000000;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  font-family: Impact, sans-serif;
+  font-size: 18pt;
+  font-weight: bold;
+  color: #3d85c6;
+  text-align: center;
+  padding-top: 40px;
+}
+
+.meta {
+  font-family: 'Roboto', sans-serif;
+  font-size: 10pt;
+  color: #b7b7b7;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #444;
+  margin: 30px 0;
+}
+
+.joke, .subheading {
+  font-family: Impact, sans-serif;
+  font-size: 16pt;
+  color: #3d85c6;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.content {
+  font-family: Arial, sans-serif;
+  font-size: 12pt;
+  color: #ffffff;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.content img {
+  display: block;
+  margin: 20px auto;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: #ffffff;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.page-wrapper {
+    padding: 0 60px;
+}
+
+/* Этот общий стиль для <li> может конфликтовать с боковой панелью */
+li {
+  list-style-type: square;
+}
+
+.top-banner {
+  width: 100%;
+  overflow: hidden;
+  max-height: 60vh;
+}
+
+.top-banner img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+  max-height: 60vh;
+}
+
+@media (max-width: 600px) {
+  .top-banner {
+    max-height: 40vh;
+  }
+  .top-banner img {
+    max-height: 40vh;
+  }
+}
+
+
+/* =============================================== */
+/* СТИЛИ ДЛЯ БОКОВОЙ ПАНЕЛИ И КНОПКИ (УЛУЧШЕНЫ) */
+/* =============================================== */
+
+/* Кнопка-логотип без фона */
+.menu-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1001;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    border-radius: 5px;
+}
+
+/* Стили для логотипа внутри кнопки */
+.menu-button img {
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
+}
+
+/* Панель слева */
+.sidebar {
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    
+    width: 300px;
+    background-color: #111;
+    overflow-x: hidden;
+    padding-top: 60px;
+    
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+}
+
+.sidebar.open {
+    transform: translateX(0);
+}
+
+.sidebar-content {
+    padding: 0 20px;
+}
+
+/* Стили для логотипа в самой панели */
+.sidebar-logo {
+    display: block;
+    max-width: 80%;
+    height: auto;
+    margin: 0 auto 20px auto;
+}
+
+/* --- ИЗМЕНЕНИЯ НИЖЕ --- */
+
+/* Убираем маркеры (квадраты) у ВСЕХ пунктов в боковой панели */
+.sidebar-content li {
+    list-style-type: none; /* Явно убираем маркеры, переопределяя общий стиль */
+    margin: 0;             /* Убираем лишние отступы между пунктами */
+}
+
+/* Стили для ссылок - УВЕЛИЧИВАЕМ ОБЛАСТЬ НАЖАТИЯ */
+.sidebar-content ul li a {
+    display: block;
+    padding: 18px 5px; /* УВЕЛИЧИЛИ вертикальный отступ с 12px до 18px */
+    text-decoration: none;
+    color: #b7b7b7;
+    font-size: 14px;
+    transition: color 0.2s, background-color 0.2s;
+    border-radius: 4px; /* Добавляем скругление для вида "полосок" */
+    margin-bottom: 2px; /* Небольшой отступ между "полосками" */
+}
+
+.sidebar-content ul li a:hover {
+    color: #ffffff;
+    background-color: #015394;
+}
+
+/* Кнопка закрытия */
+.sidebar .closebtn {
+    position: absolute;
+    top: 10px;
+    right: 25px;
+    font-size: 40px;
+    text-decoration: none;
+    color: #ffffff;
+}
+
+
+/* =============================================== */
+/* СТИЛИ ДЛЯ ФУТЕРА                               */
+/* =============================================== */
+
+.m5-footer {
+  margin-top: 80px;
+  background-color: #015394;
+  color: white;
+  font-family: Arial, sans-serif;
+  animation: fadeInPage 1.2s ease-out;
+}
+
+@keyframes fadeInPage {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fade-in {
+  animation: fadeInUp 1s ease-out;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.gradient-top {
+  height: 50px;
+  background: linear-gradient(to bottom, black, #015394);
+}
+
+.m5-footer .container {
+  padding: 40px;
+  text-align: center;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.card {
+  background-color: #003b6f;
+  border-radius: 12px;
+  padding: 20px;
+  width: 250px;
+  animation: fadeInUp 1s ease forwards;
+  opacity: 0;
+}
+
+.card:nth-child(1) { animation-delay: 0.2s; }
+.card:nth-child(2) { animation-delay: 0.4s; }
+.card:nth-child(3) { animation-delay: 0.6s; }
+.card:nth-child(4) { animation-delay: 0.8s; }
+
+.card img {
+  width: 100px;
+  height: 100px;
+  border-radius: 20%;
+}
+
+.card h3 {
+  margin: 10px 0 5px;
+}
+
+.card p {
+  font-size: 14px;
+  color: #9fc5e8;
+  margin-bottom: 15px;
+}
+
+.card a.button {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: transparent;
+  border: 2px solid #ffffff;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: background-color 0.3s, color 0.3s, transform 0.2s;
+}
+
+.card a.button:hover {
+  background-color: #ffffff;
+  color: #003b6f;
+  transform: translateY(-2px);
+}
+
+.divider {
+  height: 1px;
+  background-color: #ffffff;
+  opacity: 0.3;
+  margin: 40px 0;
+}
+
+.disclaimer {
+  font-size: 15px;
+  color: #9fc5e8;
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.disclaimer-title {
+  text-align: center;
+  font-family: Impact, Charcoal, sans-serif;
+  font-size: 18pt;
+  color: #9fc5e8;
+  margin-bottom: 10px;
+}
+
+
+/* =================================================================== */
+/* НОВЫЕ СТИЛИ: ДЛЯ ДЕРЕВА НАВИГАЦИИ И НОВОГО РАЗДЕЛА В БОКОВОЙ ПАНЕЛИ */
+/* =================================================================== */
+
+/* --- Стили для вложенных списков --- */
+.sidebar-content ul ul {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out;
+    padding-left: 20px; /* Отступ для создания иерархии */
+    background-color: rgba(0, 0, 0, 0.2); /* Легкий фон для вложенности */
+}
+
+/* Показываем подпункты, когда у родителя есть класс .expanded */
+.sidebar-content .has-children.expanded > ul {
+    max-height: 500px; /* Достаточно большое значение */
+    transition: max-height 0.4s ease-in;
+}
+
+/* --- Стили для стрелочек --- */
+.sidebar-content .has-children {
+    position: relative;
+}
+
+.sidebar-content .has-children > a {
+    padding-right: 40px; /* Оставляем место для стрелки */
+}
+
+/* Рисуем саму стрелочку */
+.sidebar-content .arrow {
+    position: absolute;
+    right: 15px;
+    top: 20px; /* ПОДПРАВЛЕНО: отступ для центрирования с новым padding */
+    cursor: pointer;
+    
+    /* Рисуем треугольник с помощью CSS */
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid #3d85c6;
+    
+    /* Плавный поворот */
+    transition: transform 0.3s ease;
+}
+
+/* Поворачиваем стрелочку, когда список раскрыт */
+.sidebar-content .has-children.expanded > .arrow {
+    transform: rotate(90deg);
+}
+
+/* --- Стили для нового раздела "Полезные ссылки" --- */
+.sidebar-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #444; /* Разделительная линия */
+}
+
+.sidebar-section h4 {
+    font-family: Impact, sans-serif;
+    font-size: 16pt;
+    color: #3d85c6;
+    margin-bottom: 15px;
+}
