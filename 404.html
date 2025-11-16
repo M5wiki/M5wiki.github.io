@@ -2,200 +2,22 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>404 - Страница не найдена | M5Wiki</title>
+  <title>M5Wiki — 404 - Страница не найдена</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-  <style>
-    body {
-      background-color: #000000;
-      color: #ffffff;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-
-    .page-wrapper {
-      flex-grow: 1;
-      padding: 0 60px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      text-align: center;
-    }
-
-    h1 {
-      font-family: Impact, sans-serif;
-      font-size: 120pt;
-      font-weight: bold;
-      color: #3d85c6;
-      text-align: center;
-      margin: 0;
-      line-height: 1.2;
-    }
-
-    .subheading {
-      font-family: Impact, sans-serif;
-      font-size: 28pt;
-      color: #3d85c6;
-      text-align: center;
-      margin: 10px 0 40px 0;
-    }
-
-    .content {
-      font-family: Arial, sans-serif;
-      font-size: 14pt;
-      color: #ffffff;
-      line-height: 1.6;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    .content p {
-      margin-bottom: 20px;
-    }
-
-    .content .error-code {
-      font-size: 13px;
-      color: #b7b7b7; /* Серый цвет */
-      margin-top: 30px; /* Отступ сверху для визуального разделения */
-      font-family: 'Courier New', Courier, monospace; /* Моноширинный шрифт для кода */
-    }
-    
-    .home-button {
-      display: inline-block;
-      padding: 12px 24px;
-      background-color: transparent;
-      border: 2px solid #ffffff;
-      color: #ffffff;
-      text-decoration: none;
-      border-radius: 6px;
-      font-weight: bold;
-      font-size: 14pt;
-      transition: background-color 0.3s, color 0.3s, transform 0.2s;
-    }
-
-    .home-button:hover {
-      background-color: #ffffff;
-      color: #003b6f;
-      transform: translateY(-2px);
-    }
-
-    /* ===== Стили футера (без изменений) ===== */
-    .m5-footer {
-      margin-top: 80px;
-      background-color: #015394;
-      color: white;
-      font-family: Arial, sans-serif;
-      animation: fadeInPage 1.2s ease-out;
-    }
-
-    @keyframes fadeInPage {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    .fade-in {
-      animation: fadeInUp 1s ease-out;
-    }
-
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(40px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .gradient-top {
-      height: 50px;
-      background: linear-gradient(to bottom, black, #015394);
-    }
-
-    .m5-footer .container {
-      padding: 40px;
-      text-align: center;
-    }
-
-    .cards {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      justify-content: center;
-    }
-
-    .card {
-      background-color: #003b6f;
-      border-radius: 12px;
-      padding: 20px;
-      width: 250px;
-      animation: fadeInUp 1s ease forwards;
-      opacity: 0;
-    }
-
-    .card:nth-child(1) { animation-delay: 0.2s; }
-    .card:nth-child(2) { animation-delay: 0.4s; }
-    .card:nth-child(3) { animation-delay: 0.6s; }
-    .card:nth-child(4) { animation-delay: 0.8s; }
-
-    .card img {
-      width: 100px;
-      height: 100px;
-      border-radius: 20%;
-    }
-
-    .card h3 {
-      margin: 10px 0 5px;
-    }
-
-    .card p {
-      font-size: 14px;
-      color: #9fc5e8;
-      margin-bottom: 15px;
-    }
-
-    .card a.button {
-      display: inline-block;
-      padding: 8px 16px;
-      background-color: transparent;
-      border: 2px solid #ffffff;
-      color: #ffffff;
-      text-decoration: none;
-      border-radius: 6px;
-      font-weight: bold;
-      transition: background-color 0.3s, color 0.3s, transform 0.2s;
-    }
-
-    .card a.button:hover {
-      background-color: #ffffff;
-      color: #003b6f;
-      transform: translateY(-2px);
-    }
-
-    .divider {
-      height: 1px;
-      background-color: #ffffff;
-      opacity: 0.3;
-      margin: 40px 0;
-    }
-
-    .disclaimer {
-      font-size: 15px;
-      color: #9fc5e8;
-      line-height: 1.6;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .disclaimer-title {
-      text-align: center;
-      font-family: Impact, Charcoal, sans-serif;
-      font-size: 18pt;
-      color: #9fc5e8;
-      margin-bottom: 10px;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="page-wrapper">
+
+  <!-- Кнопка для вызова боковой панели -->
+  <button id="menu-toggle" class="menu-button">
+    <img src="image/m5wiki.png" alt="Меню M5Wiki" width="80%">
+  </button>
+
+  <!-- Место, куда будет вставлена боковая панель (например, с помощью JavaScript) -->
+  <div id="sidebar-placeholder"></div>
+
+  <!-- ИЗМЕНЕНО: Используем новый класс .error-404-wrapper -->
+  <div class="error-404-wrapper">
     <h1>404</h1>
     <div class="subheading">Страница не найдена</div>
     
@@ -209,47 +31,8 @@
     </div>
   </div>
 
-<!-- ФУТЕР M5WIKI (без изменений) -->
-<div class="m5-footer">
-  <div class="gradient-top"></div>
-  <div class="container fade-in">
-    <div class="divider"></div>
-    <div class="cards">
-      <div class="card">
-        <img src="https://raw.githubusercontent.com/M5wiki/M5wikicode/main/image/footer/admin.png" alt="Admin">
-        <h3>Администраторы</h3>
-        <p>Познакомься с командой, которая развивает и поддерживает M5Wiki — создатели, админы и модераторы.</p>
-        <a href="data:text/plain,test" class="button" target="_blank">Смотреть список</a>
-      </div>
-      <div class="card">
-        <img src="https://raw.githubusercontent.com/M5wiki/M5wikicode/main/image/footer/M5_wiki.png" alt="@M5_wiki">
-        <h3>@M5_wiki</h3>
-        <p>Маяк всех обновлений. Этот канал — твой проводник в мир возможностей и вдохновения с M5Stack.</p>
-        <a href="https://t.me/M5_wiki" class="button" target="_blank">Перейти в канал</a>
-      </div>
-      <div class="card">
-        <img src="https://raw.githubusercontent.com/M5wiki/M5wikicode/main/image/footer/M5ProjectBase.png" alt="@M5ProjectBase">
-        <h3>@M5ProjectBase</h3>
-        <p>Канал для новичков с M5Stick. Тут собраны полезные материалы и файлы, а ещё можно пообщаться с единомышленниками.</p>
-        <a href="https://t.me/M5ProjectBase" class="button" target="_blank">Перейти в канал</a>
-      </div>
-      <div class="card">
-        <img src="https://raw.githubusercontent.com/M5wiki/M5wikicode/main/image/footer/m5wiki_chat.png" alt="M5ProjectBase Chat">
-        <h3>@M5ProjectBase_chat</h3>
-        <p>Место, где идеи становятся проектами. Обсуждения, помощь и творчество — всё в одном чате.</p>
-        <a href="https://t.me/+bkGlYuJNGrMzN2Yy" class="button" target="_blank">Присоединиться</a>
-      </div>
-    </div>
-    <div class="divider"></div>
-    <div class="disclaimer">
-      <div class="disclaimer-title">Дисклеймер M5Wiki</div>
-      <p>M5Wiki предоставляет информацию о возможностях работы с устройствами M5StickC, ESP и другими совместимыми компонентами исключительно в образовательных и демонстрационных целях.</p>
-      <p>Мы не призываем к использованию представленных материалов в незаконных или несанкционированных целях. Вся информация предназначена только для работы с вашими собственными устройствами или с явного согласия их владельцев.</p>
-      <p>Неавторизованное вмешательство в работу чужих устройств, систем или сетей может нарушать законодательство и привести к юридической ответственности. Кроме того, любые эксперименты с электроникой могут привести к повреждению оборудования или потере данных.</p>
-      <p>Администрация M5Wiki не несёт ответственности за последствия использования материалов сайта. Пользователи должны действовать в рамках закона и с пониманием возможных рисков.</p>
-      <p>Использование сайта M5Wiki регулируется нашей Политикой использования, где подробно изложены правила, ответственность пользователей и защита персональных данных.</p>
-    </div>
-  </div>
-</div>
+  <div id="footer-placeholder"></div>
+
+  <script src="script.js"></script>
 </body>
 </html>

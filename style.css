@@ -75,7 +75,6 @@ a:hover {
     padding: 0 60px;
 }
 
-/* Этот общий стиль для <li> может конфликтовать с боковой панелью */
 li {
   list-style-type: square;
 }
@@ -106,50 +105,42 @@ li {
 
 
 /* =============================================== */
-/* СТИЛИ ДЛЯ БОКОВОЙ ПАНЕЛИ И КНОПКИ (УЛУЧШЕНЫ) */
+/* СТИЛИ ДЛЯ БОКОВОЙ ПАНЕЛИ И КНОПКИ               */
 /* =============================================== */
 
-/* Кнопка-логотип без фона */
 .menu-button {
     position: fixed;
     top: 20px;
     left: 20px;
     z-index: 1001;
-
     display: flex;
     justify-content: center;
     align-items: center;
-    
     width: 50px;
     height: 50px;
     padding: 0;
-    
     cursor: pointer;
     background-color: transparent;
     border: none;
     border-radius: 5px;
 }
 
-/* Стили для логотипа внутри кнопки */
 .menu-button img {
     width: 80%;
     height: 80%;
     object-fit: contain;
 }
 
-/* Панель слева */
 .sidebar {
     position: fixed;
     z-index: 1000;
     top: 0;
     left: 0;
     bottom: 0;
-    
     width: 300px;
     background-color: #111;
     overflow-x: hidden;
     padding-top: 60px;
-    
     transform: translateX(-100%);
     transition: transform 0.3s ease-in-out;
 }
@@ -162,7 +153,6 @@ li {
     padding: 0 20px;
 }
 
-/* Стили для логотипа в самой панели */
 .sidebar-logo {
     display: block;
     max-width: 80%;
@@ -170,24 +160,20 @@ li {
     margin: 0 auto 20px auto;
 }
 
-/* --- ИЗМЕНЕНИЯ НИЖЕ --- */
-
-/* Убираем маркеры (квадраты) у ВСЕХ пунктов в боковой панели */
 .sidebar-content li {
-    list-style-type: none; /* Явно убираем маркеры, переопределяя общий стиль */
-    margin: 0;             /* Убираем лишние отступы между пунктами */
+    list-style-type: none;
+    margin: 0;
 }
 
-/* Стили для ссылок - УВЕЛИЧИВАЕМ ОБЛАСТЬ НАЖАТИЯ */
 .sidebar-content ul li a {
     display: block;
-    padding: 18px 5px; /* УВЕЛИЧИЛИ вертикальный отступ с 12px до 18px */
+    padding: 18px 5px;
     text-decoration: none;
     color: #b7b7b7;
     font-size: 14px;
     transition: color 0.2s, background-color 0.2s;
-    border-radius: 4px; /* Добавляем скругление для вида "полосок" */
-    margin-bottom: 2px; /* Небольшой отступ между "полосками" */
+    border-radius: 4px;
+    margin-bottom: 2px;
 }
 
 .sidebar-content ul li a:hover {
@@ -195,7 +181,6 @@ li {
     background-color: #015394;
 }
 
-/* Кнопка закрытия */
 .sidebar .closebtn {
     position: absolute;
     top: 10px;
@@ -203,6 +188,61 @@ li {
     font-size: 40px;
     text-decoration: none;
     color: #ffffff;
+}
+
+/* =================================================================== */
+/* НОВЫЕ СТИЛИ: ДЛЯ ДЕРЕВА НАВИГАЦИИ И НОВОГО РАЗДЕЛА В БОКОВОЙ ПАНЕЛИ */
+/* =================================================================== */
+
+.sidebar-content ul ul {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out;
+    padding-left: 20px;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-content .has-children.expanded > ul {
+    max-height: 500px;
+    transition: max-height 0.4s ease-in;
+}
+
+.sidebar-content .has-children {
+    position: relative;
+}
+
+.sidebar-content .has-children > a {
+    padding-right: 40px;
+}
+
+.sidebar-content .arrow {
+    position: absolute;
+    right: 15px;
+    top: 20px;
+    cursor: pointer;
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid #3d85c6;
+    transition: transform 0.3s ease;
+}
+
+.sidebar-content .has-children.expanded > .arrow {
+    transform: rotate(90deg);
+}
+
+.sidebar-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #444;
+}
+
+.sidebar-section h4 {
+    font-family: Impact, sans-serif;
+    font-size: 16pt;
+    color: #3d85c6;
+    margin-bottom: 15px;
 }
 
 
@@ -321,67 +361,73 @@ li {
 }
 
 
-/* =================================================================== */
-/* НОВЫЕ СТИЛИ: ДЛЯ ДЕРЕВА НАВИГАЦИИ И НОВОГО РАЗДЕЛА В БОКОВОЙ ПАНЕЛИ */
-/* =================================================================== */
+/* ============================================================= */
+/* НОВЫЙ РАЗДЕЛ: УНИКАЛЬНЫЕ СТИЛИ ТОЛЬКО ДЛЯ СТРАНИЦЫ 404      */
+/* ============================================================= */
 
-/* --- Стили для вложенных списков --- */
-.sidebar-content ul ul {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.4s ease-out;
-    padding-left: 20px; /* Отступ для создания иерархии */
-    background-color: rgba(0, 0, 0, 0.2); /* Легкий фон для вложенности */
+/* Обертка для всей страницы 404, чтобы центрировать контент по вертикали */
+.error-404-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 100vh; /* Растягиваем на всю высоту экрана */
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-/* Показываем подпункты, когда у родителя есть класс .expanded */
-.sidebar-content .has-children.expanded > ul {
-    max-height: 500px; /* Достаточно большое значение */
-    transition: max-height 0.4s ease-in;
+/* Огромный заголовок 404, переопределяет общий стиль h1 */
+.error-404-wrapper h1 {
+  font-size: 120pt; /* Огромный размер */
+  margin: 0;
+  line-height: 1.2;
+  padding: 0; /* Сбрасываем стандартный padding от h1 */
 }
 
-/* --- Стили для стрелочек --- */
-.sidebar-content .has-children {
-    position: relative;
+/* Подзаголовок, переопределяет общий стиль .subheading */
+.error-404-wrapper .subheading {
+  font-size: 28pt;
+  margin: 10px 0 40px 0;
 }
 
-.sidebar-content .has-children > a {
-    padding-right: 40px; /* Оставляем место для стрелки */
+/* Блок с текстом и кнопкой */
+.error-404-wrapper .content {
+  font-size: 14pt;
+  max-width: 600px;
+  margin: 0 auto; /* Центрируем сам блок */
 }
 
-/* Рисуем саму стрелочку */
-.sidebar-content .arrow {
-    position: absolute;
-    right: 15px;
-    top: 20px; /* ПОДПРАВЛЕНО: отступ для центрирования с новым padding */
-    cursor: pointer;
-    
-    /* Рисуем треугольник с помощью CSS */
-    width: 0;
-    height: 0;
-    border-left: 6px solid transparent;
-    border-right: 6px solid transparent;
-    border-top: 8px solid #3d85c6;
-    
-    /* Плавный поворот */
-    transition: transform 0.3s ease;
+.error-404-wrapper .content p {
+  margin-bottom: 20px;
 }
 
-/* Поворачиваем стрелочку, когда список раскрыт */
-.sidebar-content .has-children.expanded > .arrow {
-    transform: rotate(90deg);
+/* Кнопка "Вернуться на главную" */
+.error-404-wrapper .home-button {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: transparent;
+  border: 2px solid #ffffff;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 14pt;
+  transition: background-color 0.3s, color 0.3s, transform 0.2s;
 }
 
-/* --- Стили для нового раздела "Полезные ссылки" --- */
-.sidebar-section {
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 1px solid #444; /* Разделительная линия */
+.error-404-wrapper .home-button:hover {
+  background-color: #ffffff;
+  color: #003b6f;
+  transform: translateY(-2px);
+  text-decoration: none; /* Убираем подчеркивание от общего стиля a:hover */
 }
 
-.sidebar-section h4 {
-    font-family: Impact, sans-serif;
-    font-size: 16pt;
-    color: #3d85c6;
-    margin-bottom: 15px;
+/* Серый код ошибки */
+.error-404-wrapper .error-code {
+  font-family: monospace;
+  font-weight: bold;
+  font-size: 13px;
+  color: #b7b7b7;
+  margin-top: 30px;
 }
