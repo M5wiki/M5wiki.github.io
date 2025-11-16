@@ -1,23 +1,30 @@
-name: Release Notify
+name: Notify Latest Release
 
 on:
-  release:
-    types: [published]
+  schedule:
+    - cron: '0 * * * *' # запуск каждый час
+  workflow_dispatch: # чтобы можно было запускать вручную
 
 jobs:
-  notify:
+  notify_latest:
     runs-on: ubuntu-latest
     steps:
-      - name: Notify Telegram
-        uses: appleboy/telegram-action@v1
+      - name: Get latest release info
+        uses: actions/github-script@v6
+        id: get_release
         with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          script: |
+            const release = await github.rest.repos.getLatestRelease({
+              owner: 'OWNER',
+              repo: 'REPO'
+            });
+            return release.data;
+      - name: Send Telegram message
+        uses: appleboy/telegram-action@v0.3.0
+        with:
+          token: ${{ secrets.TG_BOT_TOKEN }}
+          to: ${{ secrets.TG_CHAT_ID }}
           message: |
-            Новый релиз опубликован!
-            Название: ${{ github.event.release.name }}
-            Версия: ${{ github.event.release.tag_name }}
-            Описание:
-            ${{ github.event.release.body }}
-
-            Ссылка: ${{ github.event.release.html_url }}
+            Последний релиз: ${{ steps.get_release.outputs.result.name }}
+            Описание: ${{ steps.get_release.outputs.result.body }}
+            Ссылка: ${{ steps.get_release.outputs.result.html_url }}
