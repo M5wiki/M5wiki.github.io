@@ -2,29 +2,32 @@ name: Notify Latest Release
 
 on:
   schedule:
-    - cron: '0 * * * *' # запуск каждый час
+    - cron: '*/5 * * * *' # каждые 5 минут
   workflow_dispatch: # чтобы можно было запускать вручную
 
 jobs:
   notify_latest:
     runs-on: ubuntu-latest
+
     steps:
       - name: Get latest release info
-        uses: actions/github-script@v6
         id: get_release
+        uses: actions/github-script@v6
         with:
           script: |
             const release = await github.rest.repos.getLatestRelease({
-              owner: 'OWNER',
-              repo: 'REPO'
+              owner: 'M5wiki',
+              repo: 'M5wiki.github.io'
             });
             return release.data;
+
       - name: Send Telegram message
         uses: appleboy/telegram-action@v0.3.0
         with:
           token: ${{ secrets.TG_BOT_TOKEN }}
           to: ${{ secrets.TG_CHAT_ID }}
           message: |
-            Последний релиз: ${{ steps.get_release.outputs.result.name }}
+            📢 Новый релиз!
+            Название: ${{ steps.get_release.outputs.result.name }}
             Описание: ${{ steps.get_release.outputs.result.body }}
             Ссылка: ${{ steps.get_release.outputs.result.html_url }}
