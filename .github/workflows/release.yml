@@ -112,14 +112,9 @@ jobs:
 
             ${{ steps.get_release.outputs.body }}
 
-            🔗 Подробнее: ${{ steps.get_release.outputs.url }}
-
       - name: Save current release id
         if: steps.check.outputs.new == 'true'
         run: echo "${{ steps.get_release.outputs.id }}" > .last_release            📅 Обновление new.m5wiki.tech • [${{ steps.get_release.outputs.date }}]
             Версия [${{ steps.get_release.outputs.version }}]
 
             ${{ steps.get_release.outputs.body }}
-
-            🔗 Подробнее: ${{ steps.get_release.outputs.url }}
-            🔗 Ссылка: ${{ steps.get_release.outputs.url }}
