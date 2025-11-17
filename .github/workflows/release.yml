@@ -15,14 +15,18 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const release = await github.rest.repos.getLatestRelease({
+            const r = await github.rest.repos.getLatestRelease({
               owner: 'M5wiki',
               repo: 'M5wiki.github.io'
             });
 
-            core.setOutput("name", release.data.name || "Без названия");
-            core.setOutput("body", release.data.body || "Нет описания");
-            core.setOutput("url", release.data.html_url);
+            const date = new Date(r.data.published_at)
+              .toLocaleDateString('ru-RU');
+
+            core.setOutput("date", date);
+            core.setOutput("version", r.data.tag_name || r.data.name || "Без версии");
+            core.setOutput("body", r.data.body || "Нет описания");
+            core.setOutput("url", r.data.html_url);
 
       - name: Send Telegram message
         uses: appleboy/telegram-action@v1.0.1
@@ -30,9 +34,10 @@ jobs:
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           message: |
-            📢 Новый релиз!
-            Название: ${{ steps.get_release.outputs.name }}
-            Описание:
+            📅 Обновление new.m5wiki.tech • [${{ steps.get_release.outputs.date }}]
+            Версия [${{ steps.get_release.outputs.version }}]
+
             ${{ steps.get_release.outputs.body }}
 
+            🔗 Подробнее: ${{ steps.get_release.outputs.url }}
             🔗 Ссылка: ${{ steps.get_release.outputs.url }}
