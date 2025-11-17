@@ -22,10 +22,10 @@ jobs:
             return release.data;
 
       - name: Send Telegram message
-        uses: appleboy/telegram-action@v0.3.0
+        uses: appleboy/telegram-action@v0.4.2
         with:
           token: ${{ secrets.TG_BOT_TOKEN }}
-          to: ${{ secrets.TG_CHAT_ID }}
+          chat_id: ${{ secrets.TG_CHAT_ID }}
           message: |
             📢 Новый релиз!
             Название: ${{ steps.get_release.outputs.result.name }}
