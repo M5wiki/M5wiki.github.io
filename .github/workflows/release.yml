@@ -3,7 +3,7 @@ name: Notify Latest Release
 on:
   schedule:
     - cron: '*/5 * * * *' # каждые 5 минут
-  workflow_dispatch: # чтобы можно было запускать вручную
+  workflow_dispatch:
 
 jobs:
   notify_latest:
@@ -22,10 +22,10 @@ jobs:
             return release.data;
 
       - name: Send Telegram message
-        uses: appleboy/telegram-action@v0.4.2
+        uses: appleboy/telegram-action@v1.0.1
         with:
-          token: ${{ secrets.TG_BOT_TOKEN }}
-          chat_id: ${{ secrets.TG_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
           message: |
             📢 Новый релиз!
             Название: ${{ steps.get_release.outputs.result.name }}
