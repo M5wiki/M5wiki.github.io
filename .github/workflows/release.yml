@@ -2,7 +2,7 @@ name: Notify Latest Release
 
 on:
   schedule:
-    - cron: '*/5 * * * *' # каждые 5 минут
+    - cron: '*/5 * * * *'
   workflow_dispatch:
 
 jobs:
@@ -10,6 +10,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Load cache (last release)
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: .last_release
+          key: last-release-cache
+
       - name: Get latest release info
         id: get_release
         uses: actions/github-script@v6
@@ -17,24 +24,59 @@ jobs:
           script: |
             const r = await github.rest.repos.getLatestRelease({
               owner: 'M5wiki',
-              repo: 'M5wiki.github.io'
+              repo: 'M5wiki.github.io',
             });
 
             const date = new Date(r.data.published_at)
               .toLocaleDateString('ru-RU');
 
+            core.setOutput("id", r.data.id.toString());
             core.setOutput("date", date);
             core.setOutput("version", r.data.tag_name || r.data.name || "Без версии");
             core.setOutput("body", r.data.body || "Нет описания");
             core.setOutput("url", r.data.html_url);
 
+      - name: Read last release id
+        id: read_last
+        run: |
+          if [ -f .last_release ]; then
+            echo "last_id=$(cat .last_release)" >> $GITHUB_OUTPUT
+          else
+            echo "last_id=0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check if new release
+        id: check
+        run: |
+          echo "current=${{ steps.get_release.outputs.id }}"
+          echo "last=${{ steps.read_last.outputs.last_id }}"
+          if [ "${{ steps.get_release.outputs.id }}" = "${{ steps.read_last.outputs.last_id }}" ]; then
+            echo "new=false" >> $GITHUB_OUTPUT
+          else
+            echo "new=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Stop if release is not new
+        if: steps.check.outputs.new == 'false'
+        run: echo "No new release. Stopping."
+
       - name: Send Telegram message
+        if: steps.check.outputs.new == 'true'
         uses: appleboy/telegram-action@v1.0.1
         with:
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           message: |
             📅 Обновление new.m5wiki.tech • [${{ steps.get_release.outputs.date }}]
+            Версия [${{ steps.get_release.outputs.version }}]
+
+            ${{ steps.get_release.outputs.body }}
+
+            🔗 Подробнее: ${{ steps.get_release.outputs.url }}
+
+      - name: Save current release id
+        if: steps.check.outputs.new == 'true'
+        run: echo "${{ steps.get_release.outputs.id }}" > .last_release            📅 Обновление new.m5wiki.tech • [${{ steps.get_release.outputs.date }}]
             Версия [${{ steps.get_release.outputs.version }}]
 
             ${{ steps.get_release.outputs.body }}
