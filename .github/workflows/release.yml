@@ -63,13 +63,14 @@ jobs:
         with:
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          parse_mode: html
           message: |
-            📅 Обновление new.m5wiki.tech • [${{ steps.get_release.outputs.date }}]
-            Версия [${{ steps.get_release.outputs.version }}]
+            <b>📅 Обновление new.m5wiki.tech • [${{ steps.get_release.outputs.date }}]</b><br>
+            <b>Версия [${{ steps.get_release.outputs.version }}]</b><br><br>
 
-            ${{ steps.get_release.outputs.body }}
+            ${{ steps.get_release.outputs.body }}<br><br>
 
-            🔗 Подробнее: ${{ steps.get_release.outputs.url }}
+            <b>🔗 Подробнее:</b> <a href="${{ steps.get_release.outputs.url }}">Перейти</a>
 
       - name: Save last release id
         if: steps.check.outputs.NEW == 'true'
