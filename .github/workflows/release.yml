@@ -10,28 +10,39 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Restore cache
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: .last_release
+          key: last-release-cache
+
+      - name: Load last release id
+        id: load_last
+        run: |
+          if [ -f ".last_release" ]; then
+            echo "LAST_ID=$(cat .last_release)" >> $GITHUB_OUTPUT
+          else
+            echo "LAST_ID=0" >> $GITHUB_OUTPUT
+          fi
+
       - name: Get latest release info
         id: get_release
         uses: actions/github-script@v6
         with:
           script: |
             const r = await github.rest.repos.getLatestRelease({
-              owner: "M5wiki",
-              repo: "M5wiki.github.io"
+              owner: 'M5wiki',
+              repo: 'M5wiki.github.io'
             });
 
-            const date = new Date(r.data.published_at).toLocaleDateString("ru-RU");
+            const date = new Date(r.data.published_at).toLocaleDateString('ru-RU');
 
             core.setOutput("id", r.data.id.toString());
             core.setOutput("date", date);
             core.setOutput("version", r.data.tag_name || r.data.name || "Без версии");
             core.setOutput("body", r.data.body || "Нет описания");
             core.setOutput("url", r.data.html_url);
-
-      - name: Load last release id
-        id: load_last
-        run: |
-          echo "LAST_ID=${LAST_ID:-0}" >> $GITHUB_OUTPUT
 
       - name: Check if new release
         id: check
@@ -62,4 +73,11 @@ jobs:
 
       - name: Save last release id
         if: steps.check.outputs.NEW == 'true'
-        run: echo "LAST_ID=${{ steps.get_release.outputs.id }}" >> $GITHUB_ENV
+        run: echo "${{ steps.get_release.outputs.id }}" > .last_release
+
+      - name: Save cache
+        if: steps.check.outputs.NEW == 'true'
+        uses: actions/cache@v4
+        with:
+          path: .last_release
+          key: last-release-cache
