@@ -10,14 +10,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Восстанавливаем сохранённый ID
       - name: Restore cache
         id: restore_cache
         uses: actions/cache@v4
         with:
           path: .last_release
           key: last-release-cache
-          restore-keys: last-release-cache
 
+      # Загружаем сохранённый ID
       - name: Load last release id
         id: load_last
         run: |
@@ -27,14 +28,68 @@ jobs:
             echo "LAST_ID=0" >> $GITHUB_OUTPUT
           fi
 
+      # Получаем данные релиза
       - name: Get latest release info
-        id: get_release
+        id: release
         uses: actions/github-script@v6
         with:
           script: |
             const r = await github.rest.repos.getLatestRelease({
               owner: 'M5wiki',
               repo: 'M5wiki.github.io'
+            });
+
+            const d = new Date(r.data.published_at).toLocaleDateString('ru-RU');
+
+            core.setOutput("id", r.data.id.toString());
+            core.setOutput("date", d);
+            core.setOutput("version", r.data.tag_name || r.data.name || "Без версии");
+            core.setOutput("body", r.data.body || "Нет описания");
+            core.setOutput("url", r.data.html_url);
+
+      # Проверяем новый ли релиз
+      - name: Compare release ID
+        id: compare
+        run: |
+          if [ "${{ steps.release.outputs.id }}" = "${{ steps.load_last.outputs.LAST_ID }}" ]; then
+            echo "NEW=false" >> $GITHUB_OUTPUT
+          else
+            echo "NEW=true" >> $GITHUB_OUTPUT
+          fi
+
+      # Стоп если релиза нет
+      - name: Stop if no new release
+        if: steps.compare.outputs.NEW == 'false'
+        run: echo "No new release. Stopping."
+
+      # Отправляем сообщение
+      - name: Send Telegram message
+        if: steps.compare.outputs.NEW == 'true'
+        uses: appleboy/telegram-action@v1.0.1
+        with:
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          parse_mode: Markdown
+          message: |
+            **📅 Обновление new.m5wiki.tech • [${{ steps.release.outputs.date }}]**
+            **Версия [${{ steps.release.outputs.version }}]**
+
+            ${{ steps.release.outputs.body }}
+
+            **🔗 Подробнее:** [Перейти](${{ steps.release.outputs.url }})
+
+      # Сохраняем новый ID
+      - name: Save last release id
+        if: steps.compare.outputs.NEW == 'true'
+        run: echo "${{ steps.release.outputs.id }}" > .last_release
+
+      # Обновляем кэш
+      - name: Save cache
+        if: steps.compare.outputs.NEW == 'true'
+        uses: actions/cache@v4
+        with:
+          path: .last_release
+          key: last-release-cache              repo: 'M5wiki.github.io'
             });
 
             const date = new Date(r.data.published_at).toLocaleDateString('ru-RU');
