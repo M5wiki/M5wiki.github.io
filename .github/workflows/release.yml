@@ -11,12 +11,12 @@ jobs:
 
     steps:
       - name: Restore cache
-        id: cache
+        id: restore_cache
         uses: actions/cache@v4
         with:
           path: .last_release
-          key: last-release-cache-${{ github.run_id }}
-          restore-keys: last-release-cache-
+          key: last-release-cache
+          restore-keys: last-release-cache
 
       - name: Load last release id
         id: load_last
@@ -35,6 +35,53 @@ jobs:
             const r = await github.rest.repos.getLatestRelease({
               owner: 'M5wiki',
               repo: 'M5wiki.github.io'
+            });
+
+            const date = new Date(r.data.published_at).toLocaleDateString('ru-RU');
+            core.setOutput("id", r.data.id.toString());
+            core.setOutput("date", date);
+            core.setOutput("version", r.data.tag_name || r.data.name || "Без версии");
+            core.setOutput("body", r.data.body || "Нет описания");
+            core.setOutput("url", r.data.html_url);
+
+      - name: Check if new release
+        id: check_new
+        run: |
+          if [ "${{ steps.get_release.outputs.id }}" = "${{ steps.load_last.outputs.LAST_ID }}" ]; then
+            echo "NEW=false" >> $GITHUB_OUTPUT
+          else
+            echo "NEW=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Stop if no new release
+        if: steps.check_new.outputs.NEW == 'false'
+        run: echo "No new release. Stopping."
+
+      - name: Send Telegram message
+        if: steps.check_new.outputs.NEW == 'true'
+        uses: appleboy/telegram-action@v1.0.1
+        with:
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          parse_mode: Markdown
+          message: |
+            *📅 Обновление new.m5wiki.tech • [${{ steps.get_release.outputs.date }}]*  
+            *Версия [${{ steps.get_release.outputs.version }}]*
+
+            ${{ steps.get_release.outputs.body }}
+
+            *🔗 Подробнее:* [Перейти](${{ steps.get_release.outputs.url }})
+
+      - name: Save last release id
+        if: steps.check_new.outputs.NEW == 'true'
+        run: echo "${{ steps.get_release.outputs.id }}" > .last_release
+
+      - name: Save updated cache
+        if: steps.check_new.outputs.NEW == 'true'
+        uses: actions/cache@v4
+        with:
+          path: .last_release
+          key: last-release-cache-${{ steps.get_release.outputs.id }}              repo: 'M5wiki.github.io'
             });
 
             const date = new Date(r.data.published_at).toLocaleDateString('ru-RU');
