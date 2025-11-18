@@ -2,7 +2,7 @@ name: Notify Latest Release
 
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "*/5 * * * *" # каждые 5 минут
   workflow_dispatch:
 
 jobs:
@@ -37,7 +37,6 @@ jobs:
             });
 
             const date = new Date(r.data.published_at).toLocaleDateString('ru-RU');
-
             core.setOutput("id", r.data.id.toString());
             core.setOutput("date", date);
             core.setOutput("version", r.data.tag_name || r.data.name || "Без версии");
@@ -63,15 +62,15 @@ jobs:
         with:
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          parse_mode: html
+          parse_mode: Markdown
           message: |
-            <b>📅 Обновление new.m5wiki.tech • [${{ steps.get_release.outputs.date }}]</b><br>
-            <b>Версия [${{ steps.get_release.outputs.version }}]</b><br><br>
+            *📅 Обновление new.m5wiki.tech • [${{ steps.get_release.outputs.date }}]*  
+            *Версия [${{ steps.get_release.outputs.version }}]*  
 
-            ${{ steps.get_release.outputs.body }}<br><br>
+            ${{ steps.get_release.outputs.body }}  
 
-            <b>🔗 Подробнее:</b> <a href="${{ steps.get_release.outputs.url }}">Перейти</a>
-
+            *🔗 Подробнее:* [Перейти](${ { steps.get_release.outputs.url } })
+          
       - name: Save last release id
         if: steps.check.outputs.NEW == 'true'
         run: echo "${{ steps.get_release.outputs.id }}" > .last_release
