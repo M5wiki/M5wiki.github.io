@@ -64,12 +64,12 @@ jobs:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           parse_mode: Markdown
           message: |
-            *📅 Обновление new.m5wiki.tech • [${{ steps.get_release.outputs.date }}]*  
-            *Версия [${{ steps.get_release.outputs.version }}]*  
+            **📅 Обновление new.m5wiki.tech • [${{ steps.get_release.outputs.date }}]**  
+            **Версия [${{ steps.get_release.outputs.version }}]**  
 
             ${{ steps.get_release.outputs.body }}  
 
-            *🔗 Подробнее:* [Перейти](${ { steps.get_release.outputs.url } })
+            **🔗 Подробнее:** [Перейти](${ { steps.get_release.outputs.url } })
           
       - name: Save last release id
         if: steps.check.outputs.NEW == 'true'
