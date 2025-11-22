@@ -2,7 +2,7 @@
     const isMobile = /Mobi|Android/i.test(navigator.userAgent) || navigator.maxTouchPoints > 1;
 
     const cfg = {
-        months: [9, 10, 0, 1],
+        months: [11, 0, 1],
         max: isMobile ? 50 : 200,
         chars: ['❄', '❅', '❆', '✻', '✼', '❉', '❋', '✱', '✲', '✳', '•', '·', '✦', '✧', '⋆', '✶', '✴', '✵', '❈', '❊', '✷', '✸', '*', '˖', '˙'],
         colors: ['#FFFFFF', '#F0F8FF', '#E6E6FA', '#F5F5F5'],
