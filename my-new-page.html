@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Конструктор страниц для M5Wiki</title>
+    <title>M5Wiki | Редактор статей M5Wiki</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="icon" href="image/m5wiki.png" type="image/png">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -176,7 +177,7 @@
             text-align: center;
             margin: 20px 0;
         }
-        
+
         .m5wiki-content .subheading {
              font-family: Impact, sans-serif;
              font-size: 16pt;
@@ -247,15 +248,162 @@
             max-width: 100%;
             height: auto;
         }
+        
+        /* =============================================== */
+        /* СТИЛИ ДЛЯ БОКОВОЙ ПАНЕЛИ И КНОПКИ               */
+        /* =============================================== */
+        
+        .menu-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 50px;
+            height: 50px;
+            padding: 0;
+            cursor: pointer;
+            background-color: transparent;
+            border: none;
+            border-radius: 5px;
+        }
+        
+        .menu-button img {
+            width: 80%;
+            height: 80%;
+            object-fit: contain;
+        }
+        
+        .sidebar {
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 300px;
+            background-color: #111;
+            overflow-x: hidden;
+            padding-top: 60px;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .sidebar.open {
+            transform: translateX(0);
+        }
+        
+                        .sidebar-content {
+            padding: 0 20px;
+        }
+        
+        .sidebar-logo {
+            display: block;
+            max-width: 80%;
+            height: auto;
+            margin: 0 auto 20px auto;
+        }
+        
+        .sidebar-content li {
+            list-style-type: none;
+            margin: 0;
+        }
+        
+        .sidebar-content ul li a {
+            display: block;
+            padding: 18px 5px;
+            text-decoration: none;
+            color: #b7b7b7;
+            font-size: 14px;
+            transition: color 0.2s, background-color 0.2s;
+            border-radius: 4px;
+            margin-bottom: 2px;
+        }
+        
+        .sidebar-content ul li a:hover {
+            color: #ffffff;
+            background-color: #015394;
+        }
+        
+        .sidebar .closebtn {
+            position: absolute;
+            top: 10px;
+            right: 25px;
+            font-size: 40px;
+            text-decoration: none;
+            color: #ffffff;
+        }
+        
+        /* =================================================================== */
+        /* НОВЫЕ СТИЛИ: ДЛЯ ДЕРЕВА НАВИГАЦИИ И НОВОГО РАЗДЕЛА В БОКОВОЙ ПАНЕЛИ */
+        /* =================================================================== */
+        
+        .sidebar-content ul ul {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+            padding-left: 20px;
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        
+        .sidebar-content .has-children.expanded > ul {
+            max-height: 500px;
+            transition: max-height 0.4s ease-in;
+        }
+
+        .sidebar-content .has-children {
+            position: relative;
+        }
+
+        .sidebar-content .has-children > a {
+            padding-right: 40px;
+        }
+
+        .sidebar-content .arrow {
+            position: absolute;
+            right: 15px;
+            top: 20px;
+            cursor: pointer;
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 8px solid #3d85c6;
+            transition: transform 0.3s ease;
+        }
+        
+        .sidebar-content .has-children.expanded > .arrow {
+            transform: rotate(90deg);
+        }
+        
+        .sidebar-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+        }
+        
+        .sidebar-section h4 {
+            font-family: Impact, sans-serif;
+            font-size: 16pt;
+            color: #3d85c6;
+            margin-bottom: 15px;
+        }
 
     </style>
+      <button id="menu-toggle" class="menu-button">
+    <img src="image/m5wiki.png" alt="Меню M5Wiki" width="80%">
+</button>
+
+  <div id="sidebar-placeholder"></div>
+
 </head>
 <body>
 
     <div class="container">
         <div class="editor-panel">
             <div class="editor-header">
-                <h1>Редактор M5Wiki</h1>
+                <h1>Редактор статей M5Wiki</h1>
                 <div class="banner-setting">
                     <label for="banner-number-input">Номер баннера:</label>
                     <input type="number" id="banner-number-input" value="0" min="0">
@@ -282,10 +430,10 @@
         </div>
 
         <div class="preview-panel">
-            <div class="panel-title">Предпросмотр (как будет выглядеть на m5wiki)</div>
+            <div class="panel-title">Предпросмотр</div>
             <div id="preview" class="m5wiki-content">
             </div>
-            <div class="panel-title">Код для вставки на m5wiki</div>
+            <div class="panel-title">HTML код</div>
             <textarea id="code-output" readonly></textarea>
         </div>
     </div>
@@ -381,6 +529,11 @@
         editor.addEventListener('input', updateOutput);
         updateOutput();
     </script>
-
+          <script>
+    window.SHOW_BANNER = '0';
+</script>
+<script src="banner-system.js"></script>
+  <script src="script.js"></script>
+  <script src="snow.js"></script>
 </body>
 </html>
