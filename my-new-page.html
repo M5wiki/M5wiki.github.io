@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Конструктор страниц для M5Wiki</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #1a1a1a;
+            color: #f0f0f0;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .editor-panel, .preview-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .editor-panel {
+            border-right: 1px solid #444;
+            background-color: #222;
+        }
+
+        .preview-panel {
+            background-color: #000;
+        }
+
+        h1 {
+            text-align: center;
+            color: #3d85c6;
+            margin-top: 0;
+            font-family: Impact, sans-serif;
+            font-size: 18pt;
+        }
+
+        .toolbar {
+            padding: 10px;
+            background-color: #333;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .toolbar button {
+            padding: 8px 12px;
+            border: 1px solid #555;
+            background-color: #444;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .toolbar button:hover {
+            background-color: #555;
+        }
+        
+        .toolbar .download-button {
+            background-color: #0a5f0a;
+            border-color: #0a7f0a;
+            font-weight: bold;
+        }
+
+        .toolbar .download-button:hover {
+            background-color: #0c7f0c;
+        }
+
+        #editor {
+            flex-grow: 1;
+            border: 1px solid #444;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-y: auto;
+            min-height: 400px;
+            background-color: #111;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            font-size: 12pt;
+            line-height: 1.6;
+        }
+
+        #editor:empty:not(:focus)::before {
+            content: attr(data-placeholder);
+            color: #888;
+            font-style: italic;
+        }
+
+        #preview {
+            flex-grow: 1;
+            border: 1px solid #444;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-y: auto;
+            background-color: #000;
+        }
+
+        #code-output {
+            margin-top: 15px;
+            width: 100%;
+            height: 150px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 13px;
+            border: 1px solid #444;
+            padding: 10px;
+            border-radius: 5px;
+            resize: vertical;
+            background-color: #1a1a1a;
+            color: #b7b7b7;
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #3d85c6;
+            font-family: Impact, sans-serif;
+        }
+
+        .m5wiki-content {
+            font-family: Arial, sans-serif;
+            font-size: 12pt;
+            color: #ffffff;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .m5wiki-content h1 {
+            font-family: Impact, sans-serif;
+            font-size: 18pt;
+            font-weight: bold;
+            color: #3d85c6;
+            text-align: center;
+            padding-top: 40px;
+        }
+
+        .m5wiki-content h2, .m5wiki-content h3, .m5wiki-content h4 {
+            font-family: Impact, sans-serif;
+            font-size: 16pt;
+            color: #3d85c6;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .m5wiki-content .subheading {
+             font-family: Impact, sans-serif;
+             font-size: 16pt;
+             color: #3d85c6;
+             text-align: center;
+             margin: 20px 0;
+        }
+
+        .m5wiki-content p {
+            margin-bottom: 1em;
+        }
+
+        .m5wiki-content strong, .m5wiki-content b {
+            font-weight: bold;
+        }
+
+        .m5wiki-content em, .m5wiki-content i {
+            font-style: italic;
+        }
+
+        .m5wiki-content a {
+            color: #ffffff;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .m5wiki-content a:hover {
+            text-decoration: underline;
+        }
+
+        .m5wiki-content ul, .m5wiki-content ol {
+            padding-left: 20px;
+        }
+
+        .m5wiki-content li {
+            list-style-type: square;
+            margin-bottom: 0.5em;
+        }
+        
+        .m5wiki-content ul li, .m5wiki-content ol li {
+            list-style-type: square;
+        }
+
+        .m5wiki-content hr {
+            border: none;
+            border-top: 1px solid #444;
+            margin: 30px 0;
+        }
+        
+        .m5wiki-content code {
+            background-color: #333;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+
+        .m5wiki-content blockquote {
+            border-left: 4px solid #3d85c6;
+            padding-left: 15px;
+            margin-left: 0;
+            color: #b7b7b7;
+            font-style: italic;
+        }
+
+        .m5wiki-content img {
+            display: block;
+            margin: 20px auto;
+            max-width: 100%;
+            height: auto;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="editor-panel">
+            <h1>Редактор M5Wiki</h1>
+            <div class="toolbar">
+                <button onclick="formatText('bold')"><b>Жирный</b></button>
+                <button onclick="formatText('italic')"><i>Курсив</i></button>
+                <button onclick="formatText('underline')"><u>Подчеркнутый</u></button>
+                <button onclick="formatText('strikeThrough')"><s>Зачеркнутый</s></button>
+                <button onclick="formatText('insertUnorderedList')">&#8226; Список</button>
+                <button onclick="formatText('insertOrderedList')">1. Список</button>
+                <button onclick="insertLink()">Ссылка</button>
+                <button onclick="insertImage()">Изображение</button>
+                <button onclick="insertSeparator()">Разделитель</button>
+                <button onclick="formatText('formatBlock', '<p>');">Параграф (P)</button>
+                <button onclick="formatText('formatBlock', '<h1>');">Заголовок 1 (H1)</button>
+                <button onclick="formatText('formatBlock', '<h2>');">Заголовок 2 (H2)</button>
+                <button onclick="formatText('removeFormat')">Убрать формат</button>
+                <button class="download-button" onclick="downloadHtml()">💾 Скачать HTML</button>
+            </div>
+            <div id="editor" contenteditable="true" data-placeholder="Это редактор для ваших страниц M5Wiki.&#10;&#10;Используйте панель инструментов для форматирования текста: добавляйте жирный шрифт, ссылки, изображения и разделители.&#10;&#10;Справа вы видите предпросмотр и готовый HTML-код. Когда страница будет готова, нажмите '💾 Скачать HTML', чтобы получить полноценный файл.">
+            </div>
+        </div>
+
+        <div class="preview-panel">
+            <div class="panel-title">Предпросмотр (как будет выглядеть на m5wiki)</div>
+            <div id="preview" class="m5wiki-content">
+            </div>
+            <div class="panel-title">Код для вставки на m5wiki</div>
+            <textarea id="code-output" readonly></textarea>
+        </div>
+    </div>
+
+    <script>
+        const editor = document.getElementById('editor');
+        const preview = document.getElementById('preview');
+        const codeOutput = document.getElementById('code-output');
+
+        const encodedTemplate = "%3C%21DOCTYPE%20html%3E%0A%3Chtml%20lang%3D%22ru%22%3E%0A%3Chead%3E%0A%20%20%3Cmeta%20charset%3D%22UTF-8%22%3E%0A%20%20%3Ctitle%3E%3C%21--%20PAGE_TITLE%20--%3E%3C%2Ftitle%3E%0A%20%20%3Clink%20href%3D%22https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRoboto%26display%3Dswap%22%20rel%3D%22stylesheet%22%3E%0A%20%20%3Clink%20rel%3D%22stylesheet%22%20href%3D%22style.css%22%3E%0A%20%20%3Clink%20rel%3D%22icon%22%20href%3D%22image%2Fm5wiki.png%22%20type%3D%22image%2Fpng%22%3E%0A%20%20%3Cmeta%20name%3D%22viewport%22%20content%3D%22width%3Ddevice-width%2C%20initial-scale%3D1.0%22%3E%0A%3C%2Fhead%3E%0A%3Cbody%3E%0A%20%20%3Cbutton%20id%3D%22menu-toggle%22%20class%3D%22menu-button%22%3E%0A%20%20%20%20%3Cimg%20src%3D%22image%2Fm5wiki.png%22%20alt%3D%22%D0%9C%D0%B5%D0%BD%D1%8E%20M5Wiki%22%20width%3D%2280%25%22%3E%0A%20%20%3C%2Fbutton%3E%0A%20%20%3Cdiv%20id%3D%22sidebar-placeholder%22%3E%3C%2Fdiv%3E%0A%20%20%3Cdiv%20class%3D%22page-wrapper%22%3E%0A%20%20%20%20%3Cdiv%20class%3D%22content%22%3E%0A%20%20%20%20%20%20%3C%21--%20PAGE_CONTENT%20--%3E%0A%20%20%20%20%3C%2Fdiv%3E%0A%20%20%3C%2Fdiv%3E%0A%20%20%3Cdiv%20id%3D%22footer-placeholder%22%3E%3C%2Fdiv%3E%0A%20%20%3Cscript%3E%0A%20%20%20%20window.SHOW_BANNER%20%3D%20'8'%3B%0A%20%20%3C%2Fscript%3E%0A%20%20%3Cscript%20src%3D%22banner-system.js%22%3E%3C%2Fscript%3E%0A%20%20%3Cscript%20src%3D%22script.js%22%3E%3C%2Fscript%3E%0A%20%20%3Cscript%20src%3D%22snow.js%22%3E%3C%2Fscript%3E%0A%3C%2Fbody%3E%0A%3C%2Fhtml%3E";
+
+        function formatHtml(html) {
+            const tab = '  ';
+            let result = '';
+            let indent = '';
+
+            html.split(/>\s*</).forEach(function(element) {
+                if (element.match(/^\/\w/)) {
+                    indent = indent.substring(tab.length);
+                }
+
+                result += indent + '<' + element + '>\n';
+
+                if (element.match(/^<?\w[^>]*[^\/]$/) && !element.startsWith("input")) {
+                    indent += tab;
+                }
+            });
+
+            return result.substring(1, result.length - 2);
+        }
+
+        function updateOutput() {
+            const editorContent = editor.innerHTML;
+            preview.innerHTML = editorContent;
+            codeOutput.value = formatHtml(editorContent);
+        }
+
+        function formatText(command, value = null) {
+            document.execCommand(command, false, value);
+            editor.focus();
+            updateOutput();
+        }
+
+        function insertLink() {
+            const url = prompt('Введите URL для ссылки:', 'https://');
+            if (url) {
+                formatText('createLink', url);
+            }
+        }
+        
+        function insertImage() {
+            const url = prompt('Введите URL изображения:', 'https://');
+            if (url) {
+                const altText = prompt('Введите описание изображения (alt text):', '');
+                const imgTag = '<img src="' + url + '" alt="' + altText + '">';
+                document.execCommand('insertHTML', false, imgTag);
+                updateOutput();
+                editor.focus();
+            }
+        }
+
+        function insertSeparator() {
+            formatText('insertHorizontalRule');
+        }
+        
+        function downloadHtml() {
+            const content = editor.innerHTML;
+            const pageTitle = prompt('Введите название страницы (для тега <title>):', 'M5wiki');
+            
+            if (pageTitle === null) {
+                return;
+            }
+
+            let finalHtml = decodeURIComponent(encodedTemplate);
+
+            finalHtml = finalHtml.replace('<!-- PAGE_TITLE -->', pageTitle);
+            finalHtml = finalHtml.replace('<!-- PAGE_CONTENT -->', content);
+
+            const blob = new Blob([finalHtml], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'm5wiki-page.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        editor.addEventListener('input', updateOutput);
+        updateOutput();
+    </script>
+
+</body>
+</html>
