@@ -1,8 +1,8 @@
 [
   {
-    "id": "kirillturi",
-    "name": "@kirillturi",
-    "user": "Кирилл",
+    "id": "Fynex_x",
+    "name": "@Fynex_x",
+    "user": "Fynex",
     "status": {
       "state": "работает",
       "reason": ""
@@ -20,20 +20,19 @@
       "reason": ""
     },
     "description": "Описание нету.",
-    "role": "младший админ",
+    "role": "старший админ",
     "avatar": "https://raw.githubusercontent.com/M5wiki/M5wikicode/main/image/admin/Samsung_kn0x.png"
   },
   {
-    "id": "Wantdiesmch",
-    "name": "@Wantdiesmch",
-    "user": "Stek",
+    "id": "krrivoy",
+    "name": "@krrivoy",
+    "user": "W1zk",
     "status": {
       "state": "работает",
       "reason": ""
     },
     "description": "Описание нету.",
-    "role": "младший админ",
+    "role": "старший админ",
     "avatar": "https://raw.githubusercontent.com/M5wiki/M5wikicode/main/image/admin/Wantdiesmch.jpg"
   }
 ]
-

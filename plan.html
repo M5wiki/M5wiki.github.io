@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>M5Wiki | План по разработке</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="image/m5wiki.png" type="image/png">
+</head>
+<body>
+
+  <button id="menu-toggle" class="menu-button">
+    <img src="image/m5wiki.png" alt="Меню M5Wiki" width="80%">
+</button>
+
+  <div id="sidebar-placeholder"></div>
+
+  <h1 class="header">План по разработке M5wiki</h1>
+  <div id="columns">
+    <div class="loading">Загрузка данных...</div>
+  </div>
+  <div id="nav-buttons">
+    <button id="prev" disabled>
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" />
+        </svg>
+      </span>
+      Назад
+    </button>
+    <button id="next" disabled>
+      Вперед
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" />
+        </svg>
+      </span>
+    </button>
+  </div>
+<script>
+  const config = {
+    adminDataUrl: "/json/admin.json",
+    planDataUrl: "/json/plan.json",
+    defaultVisibleCount: 4,
+    mobileVisibleCount: 2,
+    mobileBreakpoint: 768
+  };
+  const state = {
+    currentIndex: 0,
+    visibleCount: window.innerWidth <= config.mobileBreakpoint ? config.mobileVisibleCount : config.defaultVisibleCount,
+    grouped: [],
+    adminDataById: {},
+    adminDataByUser: {},
+    currentMonthKey: null,
+    isTransitioning: false,
+    adminDataLoaded: false,
+    planDataLoaded: false
+  };
+  window.addEventListener("resize", debounce(() => {
+    state.visibleCount = window.innerWidth <= config.mobileBreakpoint ? config.mobileVisibleCount : config.defaultVisibleCount;
+    state.currentIndex = 0;
+    render();
+  }, 200));
+  function debounce(func, wait) {
+    let timeout;
+    return function() {
+      const context = this;
+      const args = arguments;
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        func.apply(context, args);
+      }, wait);
+    };
+  }
+  async function loadAdminData() {
+    try {
+      const response = await fetch(config.adminDataUrl);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      const users = await response.json();
+      
+      users.forEach(user => {
+        const idKey = user.id.toLowerCase();
+        const userKey = user.user.toLowerCase();
+        const userData = {
+          name: user.name,
+          id: user.id.toLowerCase(),
+          tg: user.user,
+          avatar: user.avatar || null
+        };
+        state.adminDataById[idKey] = userData;
+        state.adminDataByUser[userKey] = userData;
+      });
+      
+      state.adminDataLoaded = true;
+      return true;
+    } catch (err) {
+      console.error("Ошибка загрузки пользователей:", err);
+      state.adminDataLoaded = false;
+      return false;
+    }
+  }
+  async function loadPlanData() {
+    try {
+      const response = await fetch(config.planDataUrl);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      const data = await response.json();
+      
+      const map = {};
+      data.forEach(item => {
+        const key = `${item.year} ${item.month}`;
+        if (!map[key]) map[key] = [];
+        map[key].push(item);
+      });
+      
+      const monthOrder = {
+        "январь": 1, "февраль": 2, "март": 3, "апрель": 4,
+        "май": 5, "июнь": 6, "июль": 7, "август": 8,
+        "сентябрь": 9, "октябрь": 10, "ноябрь": 11, "декабрь": 12
+      };
+      
+      state.grouped = Object.entries(map).sort((a, b) => {
+        const [yearA, monthA] = a[0].split(" ");
+        const [yearB, monthB] = b[0].split(" ");
+        const yDiff = parseInt(yearA) - parseInt(yearB);
+        if (yDiff !== 0) return yDiff;
+        return monthOrder[monthA.toLowerCase()] - monthOrder[monthB.toLowerCase()];
+      });
+      
+      const now = new Date();
+      const currentYear = now.getFullYear().toString();
+      const currentMonthNum = now.getMonth() + 1;
+      const monthNames = Object.keys(monthOrder);
+      const currentMonthName = monthNames.find(
+        name => monthOrder[name] === currentMonthNum
+      );
+      state.currentMonthKey = `${currentYear} ${currentMonthName.toLowerCase()}`;
+      
+      const targetIndex = state.grouped.findIndex(([key, _]) => key.toLowerCase() === state.currentMonthKey);
+      if (targetIndex !== -1) {
+        state.currentIndex = Math.floor(targetIndex / state.visibleCount) * state.visibleCount;
+      }
+      
+      state.planDataLoaded = true;
+      return true;
+    } catch (err) {
+      console.error("Ошибка загрузки данных плана:", err);
+      state.planDataLoaded = false;
+      return false;
+    }
+  }
+  function makeLink(idOrUser) {
+    if (!idOrUser) return "";
+    let user = state.adminDataById[idOrUser.toLowerCase()] || state.adminDataByUser[idOrUser.toLowerCase()];
+    if (!user) return idOrUser;
+    const avatarHtml = user.avatar
+      ? `<img src="${user.avatar}" alt="${user.name}" class="avatar-small">`
+      : "";
+    return `<a href="https://t.me/${user.id}" target="_blank">${avatarHtml}${user.name}</a>`;
+  }
+  function getStatusIcon(status) {
+    const icons = {
+      "планируется": `<svg viewBox="0 0 24 24"><path d="M19,3H18V1H16V3H8V1H6V3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M19,19H5V8H19V19M5,6V5H19V6H5M7,10H12V15H7V10Z" /></svg>`,
+      "в процессе": `<svg viewBox="0 0 24 24"><path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" /></svg>`,
+      "готово": `<svg viewBox="0 0 24 24"><path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z" /></svg>`,
+      "приостановлено": `<svg viewBox="0 0 24 24"><path d="M14,19H18V5H14M6,19H10V5H6V19Z" /></svg>`
+    };
+    return icons[status.toLowerCase()] || `<svg viewBox="0 0 24 24"><path d="M13,9H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" /></svg>`;
+  }
+  function render() {
+    if (state.isTransitioning) return;
+    
+    const container = document.getElementById("columns");
+    
+    container.classList.add("fade-out");
+    container.classList.remove("fade-in");
+    
+    state.isTransitioning = true;
+    
+    setTimeout(() => {
+      container.innerHTML = "";
+      
+      let hasErrors = false;
+      
+      const errorsContainer = document.createElement("div");
+      errorsContainer.className = "errors-container";
+      
+      if (!state.planDataLoaded) {
+        hasErrors = true;
+        const planErrorDiv = document.createElement("div");
+        planErrorDiv.className = "m5-github-plan-error";
+        planErrorDiv.innerHTML = `
+          <div style="display: flex; align-items: center;">
+            <svg class="icon icon-error" viewBox="0 0 24 24">
+              <path d="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
+            </svg>
+            Не удалось загрузить данные плана. Пожалуйста, попробуйте обновить страницу позже.
+          </div>
+          <div class="error-code">M5W-GITHUB-PLAN-ERROR</div>
+        `;
+        errorsContainer.appendChild(planErrorDiv);
+      }
+      
+      if (!state.adminDataLoaded) {
+        hasErrors = true;
+        const adminErrorDiv = document.createElement("div");
+        adminErrorDiv.className = "m5-github-admin-error";
+        adminErrorDiv.innerHTML = `
+          <div style="display: flex; align-items: center;">
+            <svg class="icon icon-warning" viewBox="0 0 24 24">
+              <path d="M1,21H23L12,2L1,21ZM13,18H11V16H13V18ZM13,14H11V10H13V14Z" />
+            </svg>
+            Не удалось загрузить данные администраторов. Информация об исполнителях может отображаться некорректно.
+          </div>
+          <div class="warning-code">M5W-GITHUB-ADMIN-ERROR</div>
+        `;
+        errorsContainer.appendChild(adminErrorDiv);
+      }
+      
+      if (hasErrors) {
+        container.appendChild(errorsContainer);
+        
+        container.classList.remove("fade-out");
+        container.classList.add("fade-in");
+        
+        setTimeout(() => {
+          state.isTransitioning = false;
+        }, 300);
+        return;
+      }
+      
+      if (state.grouped.length === 0) {
+        const noDataDiv = document.createElement("div");
+        noDataDiv.className = "loading";
+        noDataDiv.textContent = "Нет данных для отображения.";
+        container.appendChild(noDataDiv);
+        
+        container.classList.remove("fade-out");
+        container.classList.add("fade-in");
+        
+        setTimeout(() => {
+          state.isTransitioning = false;
+        }, 300);
+        return;
+      }
+      
+      const slice = state.grouped.slice(state.currentIndex, state.currentIndex + state.visibleCount);
+      
+      slice.forEach(([key, items], idx) => {
+        const col = document.createElement("div");
+        col.className = "month-column";
+        if (key.toLowerCase() === state.currentMonthKey) {
+          col.classList.add("current-month");
+        }
+        col.style.animationDelay = `${idx * 0.1}s`;
+        
+        const header = document.createElement("div");
+        header.className = "month-header";
+        header.textContent = key;
+        col.appendChild(header);
+        
+        items.forEach(item => {
+          const div = document.createElement("div");
+          div.className = "item";
+          div.setAttribute("data-status", item.status.toLowerCase());
+          
+          const title = document.createElement("strong");
+          title.textContent = item.title;
+          
+          const content = document.createElement("div");
+          content.className = "content";
+          content.textContent = item.content;
+          
+          const status = document.createElement("div");
+          status.className = "status";
+          
+          const statusIcon = document.createElement("span");
+          statusIcon.className = "status-icon";
+          statusIcon.innerHTML = getStatusIcon(item.status);
+          
+          const statusText = document.createElement("span");
+          statusText.textContent = item.status;
+          
+          status.appendChild(statusIcon);
+          status.appendChild(statusText);
+          
+          div.appendChild(title);
+          div.appendChild(content);
+          div.appendChild(status);
+          
+          const assignDiv = document.createElement("div");
+          assignDiv.className = "assign-info";
+          
+          let assignedByHtml = "Назначил: —";
+          if (item.assigned_by) {
+            assignedByHtml = "Назначил: " + makeLink(item.assigned_by);
+          }
+          
+          let assignedToHtml = "Исполнители: —";
+          if (item.assigned_to) {
+            let assignedToList = Array.isArray(item.assigned_to) 
+              ? item.assigned_to 
+              : typeof item.assigned_to === 'string' 
+                ? [item.assigned_to] 
+                : [];
+            assignedToHtml = "Исполнители: " + assignedToList.map(id => makeLink(id)).join(", ");
+          }
+          
+          assignDiv.innerHTML = `
+            <div>${assignedByHtml}</div>
+            <div>${assignedToHtml}</div>
+          `;
+          
+          div.appendChild(assignDiv);
+          
+          div.addEventListener("click", () => {
+            content.classList.toggle('visible');
+          });
+          
+          col.appendChild(div);
+        });
+        
+        container.appendChild(col);
+      });
+      
+      document.getElementById("prev").disabled = state.currentIndex === 0;
+      document.getElementById("next").disabled = state.currentIndex + state.visibleCount >= state.grouped.length;
+      
+      container.classList.remove("fade-out");
+      container.classList.add("fade-in");
+      
+      setTimeout(() => {
+        state.isTransitioning = false;
+      }, 300);
+    }, 300);
+  }
+  function initNavigation() {
+    document.getElementById("prev").addEventListener("click", () => {
+      if (state.currentIndex > 0 && !state.isTransitioning) {
+        state.currentIndex -= state.visibleCount;
+        render();
+      }
+    });
+    
+    document.getElementById("next").addEventListener("click", () => {
+      if (state.currentIndex + state.visibleCount < state.grouped.length && !state.isTransitioning) {
+        state.currentIndex += state.visibleCount;
+        render();
+      }
+    });
+  }
+  async function init() {
+    document.getElementById("columns").innerHTML = '<div class="loading">Загрузка данных...</div>';
+    
+    await loadAdminData();
+    
+    await loadPlanData();
+    
+    initNavigation();
+    
+    render();
+  }
+  document.addEventListener("DOMContentLoaded", init);
+</script>
+  <div id="footer-placeholder"></div>
+
+  <script>
+    window.SHOW_BANNER = '0';
+</script>
+<script src="banner-system.js"></script>
+  <script src="script.js"></script>
+  <script src="snow.js"></script>
+</body>
+</html>

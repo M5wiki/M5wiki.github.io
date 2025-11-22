@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>M5Wiki | Новости и обновления</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="image/m5wiki.png" type="image/png">
+</head>
+<body>
+
+  <button id="menu-toggle" class="menu-button">
+    <img src="image/m5wiki.png" alt="Меню M5Wiki" width="80%">
+</button>
+
+  <div id="sidebar-placeholder"></div>
+
+  <div id="sidebar-placeholder"></div>
+
+
+  <div class="header">Новости и обновления</div>
+  
+  <div class="source-buttons">
+    <button class="source-btn active" data-source="m5wiki">M5wiki</button>
+    <button class="source-btn" data-source="M5ProjectBase">M5ProjectBase</button>
+  </div>
+  
+  <div id="last-posts">
+    <div class="loading-container">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Загрузка сообщений...</div>
+    </div>
+  </div>
+<script>
+  let adminData = [];
+  let githubAdminError = false;
+  let currentSource = 'm5wiki';
+  
+  const corsProxy = 'https://api.allorigins.win/raw?url=';
+
+  const newsSources = {
+    m5wiki: corsProxy + 'https://rsshub.app/telegram/channel/M5_wiki',
+    M5ProjectBase: corsProxy + 'https://www.rssground.com/services/telegram-rss/68cc4386515b8'
+  };
+  
+  document.addEventListener('DOMContentLoaded', function() {
+    const sourceButtons = document.querySelectorAll('.source-btn');
+    
+    sourceButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        sourceButtons.forEach(btn => btn.classList.remove('active'));
+        
+        this.classList.add('active');
+        
+        currentSource = this.getAttribute('data-source');
+        
+        loadNews();
+      });
+    });
+  });
+  
+  fetch('https://raw.githubusercontent.com/M5wiki/M5wikicode/main/json/admin.json')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      adminData = data; 
+      loadNews();
+    })
+    .catch(error => {
+      console.error('Ошибка загрузки данных администраторов:', error);
+      githubAdminError = true;
+      loadNews();
+    });
+  
+  function loadNews() {
+    const postsContainer = document.getElementById("last-posts");
+    
+    postsContainer.innerHTML = `
+      <div class="loading-container">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Загрузка сообщений...</div>
+      </div>
+    `;
+    
+    if (githubAdminError) {
+      const warningDiv = document.createElement("div");
+      warningDiv.className = "m5-github-admin-error";
+      warningDiv.innerHTML = `
+        <div style="display: flex; align-items: center;">
+          <svg class="icon icon-warning" viewBox="0 0 24 24">
+            <path d="M1,21H23L12,2L1,21ZM13,18H11V16H13V18ZM13,14H11V10H13V14Z" />
+          </svg>
+          Не удалось загрузить данные администраторов. Информация об авторах может отображаться некорректно.
+        </div>
+        <div class="warning-code">M5W-GITHUB-ADMIN-ERROR</div>
+      `;
+      postsContainer.insertBefore(warningDiv, postsContainer.firstChild);
+    }
+    
+    fetch(newsSources[currentSource])
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.text();
+      })
+      .then(xmlString => {
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xmlString, "text/xml");
+
+        const errorNode = xmlDoc.querySelector('parsererror');
+        if (errorNode) {
+          throw new Error('Ошибка парсинга XML-ленты.');
+        }
+
+        const items = xmlDoc.querySelectorAll('item');
+        if (!items || items.length === 0) {
+          postsContainer.innerHTML = "";
+          if (githubAdminError) {
+            const warningDiv = document.createElement("div");
+            warningDiv.className = "m5-github-admin-error";
+            warningDiv.innerHTML = `
+              <div style="display: flex; align-items: center;">
+                <svg class="icon icon-warning" viewBox="0 0 24 24">
+                  <path d="M1,21H23L12,2L1,21ZM13,18H11V16H13V18ZM13,14H11V10H13V14Z" />
+                </svg>
+                Не удалось загрузить данные администраторов. Информация об авторах может отображаться некорректно.
+              </div>
+              <div class="warning-code">M5W-GITHUB-ADMIN-ERROR</div>
+            `;
+            postsContainer.appendChild(warningDiv);
+          }
+          postsContainer.innerHTML += `
+            <div class="m5-github-admin-error">
+              <div style="display: flex; align-items: center;">
+                <svg class="icon icon-warning" viewBox="0 0 24 24">
+                  <path d="M1,21H23L12,2L1,21ZM13,18H11V16H13V18ZM13,14H11V10H13V14Z" />
+                </svg>
+                Нет доступных сообщений.
+              </div>
+              <div class="warning-code">M5W-NO-POSTS-WARNING</div>
+            </div>
+          `;
+          return;
+        }
+        
+        postsContainer.innerHTML = "";
+        if (githubAdminError) {
+          const warningDiv = document.createElement("div");
+          warningDiv.className = "m5-github-admin-error";
+          warningDiv.innerHTML = `
+            <div style="display: flex; align-items: center;">
+              <svg class="icon icon-warning" viewBox="0 0 24 24">
+                <path d="M1,21H23L12,2L1,21ZM13,18H11V16H13V18ZM13,14H11V10H13V14Z" />
+              </svg>
+              Не удалось загрузить данные администраторов. Информация об авторах может отображаться некорректно.
+            </div>
+            <div class="warning-code">M5W-GITHUB-ADMIN-ERROR</div>
+          `;
+          postsContainer.appendChild(warningDiv);
+        }
+
+        const posts = Array.from(items).slice(0, 20);
+        
+        posts.forEach((itemNode, index) => {
+          const post = {
+            title: itemNode.querySelector('title')?.textContent || 'Без заголовка',
+            link: itemNode.querySelector('link')?.textContent || '#',
+            description: itemNode.querySelector('description')?.textContent || '',
+            pubDate: itemNode.querySelector('pubDate')?.textContent || new Date().toISOString()
+          };
+
+          let html = post.description.trim();
+          html = html.replace(/\n/g, "<br>");
+          html = html.replace(/(google|гугл)[\s\S]*$/i, '');
+          
+          const tempDiv = document.createElement("div");
+          tempDiv.innerHTML = html;
+          tempDiv.querySelectorAll("img, video, audio, iframe").forEach(el => el.remove());
+          
+          const postEl = document.createElement("div");
+          postEl.className = "post-container";
+          postEl.style.animationDelay = `${index * 0.05}s`;
+          
+          const pubDate = new Date(post.pubDate);
+          const dateString = pubDate.toLocaleDateString("ru-RU");
+          const dateEl = document.createElement("div");
+          dateEl.className = "post-date";
+          dateEl.innerHTML = `
+            <svg class="icon icon-calendar" viewBox="0 0 24 24">
+              <path d="M19,3H18V1H16V3H8V1H6V3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M19,19H5V8H19V19M5,6V5H19V6H5M7,10H12V15H7V10Z" />
+            </svg>
+            ${dateString}
+          `;
+          postEl.appendChild(dateEl);
+          
+          const forwardedLine = [...tempDiv.childNodes].find(node => node.textContent?.includes("Forwarded From"));
+          
+          if (forwardedLine) {
+            const match = forwardedLine.textContent.match(/Forwarded From\s+(.*)/i);
+            if (match) {
+              const name = match[1].trim();
+              const userInfo = adminData.find(u => u.user === name) || {
+                id: null,
+                role: "Пользователь",
+                avatar: "https://raw.githubusercontent.com/M5wiki/M5wikicode/main/avatars/default.png"
+              };
+              
+              let avatar = userInfo.avatar || "https://raw.githubusercontent.com/M5wiki/M5wikicode/main/avatars/default.png";
+              let idText = userInfo.id || name;
+              
+              let authorHtml = `<div class="author-info">Автор поста: `;
+              
+              authorHtml += `<img src="${avatar}" alt="${idText}" class="avatar-small">`;
+              
+              if (userInfo.id) {
+                const tg = userInfo.id.replace(/^@/, "");
+                authorHtml += `<a href="https://t.me/${tg}" target="_blank">${userInfo.id}</a>`;
+              } else {
+                authorHtml += `${idText}`;
+              }
+              
+              authorHtml += ` <span class="user-role">(${userInfo.role})</span>`;
+              authorHtml += `</div>`;
+              
+              forwardedLine.innerHTML = authorHtml;
+            }
+          }
+          
+          const contentDiv = document.createElement("div");
+          contentDiv.className = "post-content";
+          contentDiv.innerHTML = tempDiv.innerHTML;
+          postEl.appendChild(contentDiv);
+          
+          const forwardBtn = document.createElement("a");
+          forwardBtn.href = post.link;
+          forwardBtn.target = "_blank";
+          forwardBtn.className = "forward-btn";
+          forwardBtn.innerHTML = `
+            <!-- Выбранная иконка Telegram -->
+            <svg class="icon icon-telegram" viewBox="0 0 24 24">
+              <path d="m.415 11.196 5.869 2.925c.227.112.495.104.712-.023l5.224-3.037-3.162 2.802c-.161.143-.253.347-.253.562v6.825c0 .72.919 1.023 1.35.451l2.537-3.373 6.274 3.573c.44.253 1.004-.001 1.106-.504l3.913-19.5c.117-.586-.466-1.064-1.008-.846l-22.5 8.775c-.604.236-.643 1.081-.062 1.37zm21.83-8.249-3.439 17.137-5.945-3.386c-.324-.185-.741-.103-.971.201l-1.585 2.107v-4.244l8.551-7.576c.677-.599-.101-1.664-.874-1.21l-11.39 6.622-3.992-1.989z"/>
+            </svg>
+            Открыть в Telegram
+          `;
+          postEl.appendChild(forwardBtn);
+          
+          postsContainer.appendChild(postEl);
+        });
+      })
+      .catch(error => {
+        postsContainer.innerHTML = "";
+        
+        if (githubAdminError) {
+          const adminWarningDiv = document.createElement("div");
+          adminWarningDiv.className = "m5-github-admin-error";
+          adminWarningDiv.innerHTML = `
+            <div style="display: flex; align-items: center;">
+              <svg class="icon icon-warning" viewBox="0 0 24 24">
+                <path d="M1,21H23L12,2L1,21ZM13,18H11V16H13V18ZM13,14H11V10H13V14Z" />
+              </svg>
+              Не удалось загрузить данные администраторов. Информация об авторах может отображаться некорректно.
+            </div>
+            <div class="warning-code">M5-GITHUB-ADMIN-ERROR</div>
+          `;
+          postsContainer.appendChild(adminWarningDiv);
+        }
+        
+        let rssErrorDiv;
+        if (currentSource === 'M5ProjectBase') {
+          rssErrorDiv = document.createElement("div");
+          rssErrorDiv.className = "m5-rsshub-m5projectbase-error";
+          rssErrorDiv.innerHTML = `
+            <div style="display: flex; align-items: center;">
+              <svg class="icon icon-error" viewBox="0 0 24 24">
+                <path d="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
+              </svg>
+              Не удалось загрузить сообщения с Telegram. Пожалуйста, попробуйте обновить страницу позже.
+            </div>
+            <div class="error-code">M5-RSSHUB-M5PROJECTBASE-ERROR</div>
+          `;
+        } else { 
+          rssErrorDiv = document.createElement("div");
+          rssErrorDiv.className = "m5-rsshub-m5wiki-error";
+          rssErrorDiv.innerHTML = `
+            <div style="display: flex; align-items: center;">
+              <svg class="icon icon-error" viewBox="0 0 24 24">
+                <path d="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
+              </svg>
+              Не удалось загрузить сообщения с Telegram. Пожалуйста, попробуйте обновить страницу позже.
+            </div>
+            <div class="error-code">M5-RSSHUB-M5WIKI-ERROR</div>
+          `;
+        }
+        postsContainer.appendChild(rssErrorDiv);
+        
+        console.error("Ошибка загрузки новостей:", error);
+      });
+  }
+</script>
+  <div id="footer-placeholder"></div>
+
+  <script>
+    window.SHOW_BANNER = '4';
+</script>
+<script src="banner-system.js"></script>
+  <script src="script.js"></script>
+  <script src="snow.js"></script>
+</body>
+</html>
