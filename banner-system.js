@@ -1,15 +1,10 @@
-// Файл: banner-system.js
 (function() {
-    // Проверяем, нужно ли показывать баннер
     const shouldShowBanner = () => {
-        // Здесь ваша логика проверки условия "script"
-        // Например, можно проверить переменную, cookie, localStorage или параметр URL
         return window.SHOW_BANNER || 
                localStorage.getItem('showBanner') || 
                new URLSearchParams(window.location.search).get('script');
     };
 
-    // Данные для всех баннеров
     const banners = {
         '1': {
             icon: '🔒',
@@ -67,7 +62,6 @@
         }
     };
 
-    // Стили для баннера
     const bannerStyles = `
     <style>
         .system-banner {
@@ -149,7 +143,6 @@
     </style>
     `;
 
-    // Функция для генерации HTML кода баннера
     const generateBannerHTML = (bannerNumber) => {
         const banner = banners[bannerNumber];
         if (!banner) return '';
@@ -166,23 +159,18 @@
         `;
     };
 
-    // Функция для добавления баннера на страницу
     const addBanner = () => {
         const bannerNumber = shouldShowBanner();
         
         if (!bannerNumber || !banners[bannerNumber]) return;
         
-        // Добавляем стили в head
         document.head.insertAdjacentHTML('beforeend', bannerStyles);
         
-        // Добавляем баннер в начало body
         const bannerHTML = generateBannerHTML(bannerNumber);
         document.body.insertAdjacentHTML('afterbegin', bannerHTML);
     };
 
-    // Инициализация системы
     const init = () => {
-        // Ждем полной загрузки DOM
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', addBanner);
         } else {
@@ -190,6 +178,5 @@
         }
     };
 
-    // Запускаем систему
     init();
 })();

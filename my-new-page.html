@@ -34,12 +34,36 @@
             background-color: #000;
         }
 
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
         h1 {
-            text-align: center;
             color: #3d85c6;
-            margin-top: 0;
+            margin: 0;
             font-family: Impact, sans-serif;
             font-size: 18pt;
+        }
+
+        .banner-setting {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            color: #b7b7b7;
+        }
+
+        .banner-setting input {
+            width: 60px;
+            padding: 5px;
+            border: 1px solid #555;
+            background-color: #333;
+            color: #fff;
+            border-radius: 4px;
         }
 
         .toolbar {
@@ -230,7 +254,13 @@
 
     <div class="container">
         <div class="editor-panel">
-            <h1>Редактор M5Wiki</h1>
+            <div class="editor-header">
+                <h1>Редактор M5Wiki</h1>
+                <div class="banner-setting">
+                    <label for="banner-number-input">Номер баннера:</label>
+                    <input type="number" id="banner-number-input" value="0" min="0">
+                </div>
+            </div>
             <div class="toolbar">
                 <button onclick="formatText('bold')"><b>Жирный</b></button>
                 <button onclick="formatText('italic')"><i>Курсив</i></button>
@@ -265,7 +295,7 @@
         const preview = document.getElementById('preview');
         const codeOutput = document.getElementById('code-output');
 
-        const encodedTemplate = "%3C%21DOCTYPE%20html%3E%0A%3Chtml%20lang%3D%22ru%22%3E%0A%3Chead%3E%0A%20%20%3Cmeta%20charset%3D%22UTF-8%22%3E%0A%20%20%3Ctitle%3E%3C%21--%20PAGE_TITLE%20--%3E%3C%2Ftitle%3E%0A%20%20%3Clink%20href%3D%22https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRoboto%26display%3Dswap%22%20rel%3D%22stylesheet%22%3E%0A%20%20%3Clink%20rel%3D%22stylesheet%22%20href%3D%22style.css%22%3E%0A%20%20%3Clink%20rel%3D%22icon%22%20href%3D%22image%2Fm5wiki.png%22%20type%3D%22image%2Fpng%22%3E%0A%20%20%3Cmeta%20name%3D%22viewport%22%20content%3D%22width%3Ddevice-width%2C%20initial-scale%3D1.0%22%3E%0A%3C%2Fhead%3E%0A%3Cbody%3E%0A%20%20%3Cbutton%20id%3D%22menu-toggle%22%20class%3D%22menu-button%22%3E%0A%20%20%20%20%3Cimg%20src%3D%22image%2Fm5wiki.png%22%20alt%3D%22%D0%9C%D0%B5%D0%BD%D1%8E%20M5Wiki%22%20width%3D%2280%25%22%3E%0A%20%20%3C%2Fbutton%3E%0A%20%20%3Cdiv%20id%3D%22sidebar-placeholder%22%3E%3C%2Fdiv%3E%0A%20%20%3Cdiv%20class%3D%22page-wrapper%22%3E%0A%20%20%20%20%3Cdiv%20class%3D%22content%22%3E%0A%20%20%20%20%20%20%3C%21--%20PAGE_CONTENT%20--%3E%0A%20%20%20%20%3C%2Fdiv%3E%0A%20%20%3C%2Fdiv%3E%0A%20%20%3Cdiv%20id%3D%22footer-placeholder%22%3E%3C%2Fdiv%3E%0A%20%20%3Cscript%3E%0A%20%20%20%20window.SHOW_BANNER%20%3D%20'8'%3B%0A%20%20%3C%2Fscript%3E%0A%20%20%3Cscript%20src%3D%22banner-system.js%22%3E%3C%2Fscript%3E%0A%20%20%3Cscript%20src%3D%22script.js%22%3E%3C%2Fscript%3E%0A%20%20%3Cscript%20src%3D%22snow.js%22%3E%3C%2Fscript%3E%0A%3C%2Fbody%3E%0A%3C%2Fhtml%3E";
+        const encodedTemplate = "%3C%21DOCTYPE%20html%3E%0A%3Chtml%20lang%3D%22ru%22%3E%0A%3Chead%3E%0A%20%20%3Cmeta%20charset%3D%22UTF-8%22%3E%0A%20%20%3Ctitle%3E%3C%21--%20PAGE_TITLE%20--%3E%3C%2Ftitle%3E%0A%20%20%3Clink%20href%3D%22https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRoboto%26display%3Dswap%22%20rel%3D%22stylesheet%22%3E%0A%20%20%3Clink%20rel%3D%22stylesheet%22%20href%3D%22style.css%22%3E%0A%20%20%3Clink%20rel%3D%22icon%22%20href%3D%22image%2Fm5wiki.png%22%20type%3D%22image%2Fpng%22%3E%0A%20%20%3Cmeta%20name%3D%22viewport%22%20content%3D%22width%3Ddevice-width%2C%20initial-scale%3D1.0%22%3E%0A%3C%2Fhead%3E%0A%3Cbody%3E%0A%20%20%3Cbutton%20id%3D%22menu-toggle%22%20class%3D%22menu-button%22%3E%0A%20%20%20%20%3Cimg%20src%3D%22image%2Fm5wiki.png%22%20alt%3D%22%D0%9C%D0%B5%D0%BD%D1%8E%20M5Wiki%22%20width%3D%2280%25%22%3E%0A%20%20%3C%2Fbutton%3E%0A%20%20%3Cdiv%20id%3D%22sidebar-placeholder%22%3E%3C%2Fdiv%3E%0A%20%20%3Cdiv%20class%3D%22page-wrapper%22%3E%0A%20%20%20%20%3Cdiv%20class%3D%22content%22%3E%0A%20%20%20%20%20%20%3C%21--%20PAGE_CONTENT%20--%3E%0A%20%20%20%20%3C%2Fdiv%3E%0A%20%20%3C%2Fdiv%3E%0A%20%20%3Cdiv%20id%3D%22footer-placeholder%22%3E%3C%2Fdiv%3E%0A%20%20%3Cscript%3E%0A%20%20%20%20window.SHOW_BANNER%20%3D%20%3C%21--%20BANNER_NUMBER%20--%3E%3B%0A%20%20%3C%2Fscript%3E%0A%20%20%3Cscript%20src%3D%22banner-system.js%22%3E%3C%2Fscript%3E%0A%20%20%3Cscript%20src%3D%22script.js%22%3E%3C%2Fscript%3E%0A%20%20%3Cscript%20src%3D%22snow.js%22%3E%3C%2Fscript%3E%0A%3C%2Fbody%3E%0A%3C%2Fhtml%3E";
 
         function formatHtml(html) {
             const tab = '  ';
@@ -329,10 +359,13 @@
                 return;
             }
 
+            const bannerNumber = document.getElementById('banner-number-input').value;
+
             let finalHtml = decodeURIComponent(encodedTemplate);
 
             finalHtml = finalHtml.replace('<!-- PAGE_TITLE -->', pageTitle);
             finalHtml = finalHtml.replace('<!-- PAGE_CONTENT -->', content);
+            finalHtml = finalHtml.replace('<!-- BANNER_NUMBER -->', bannerNumber);
 
             const blob = new Blob([finalHtml], { type: 'text/html' });
             const url = URL.createObjectURL(blob);
