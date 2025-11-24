@@ -40,3 +40,4 @@
     };
     setInterval(() => c.children.length < cfg.max && cs(), 300);
 })();
+
