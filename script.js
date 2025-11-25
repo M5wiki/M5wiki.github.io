@@ -1,13 +1,13 @@
 document.addEventListener('DOMContentLoaded', function() {
 
-    fetch('footer.html')
+    fetch('/footer.html')
         .then(response => response.text())
         .then(data => {
             document.getElementById('footer-placeholder').innerHTML = data;
         })
         .catch(error => console.error('Ошибка загрузки футера:', error));
 
-    fetch('sidebar.html')
+    fetch('/sidebar.html')
         .then(response => response.text())
         .then(data => {
             document.getElementById('sidebar-placeholder').innerHTML = data;
