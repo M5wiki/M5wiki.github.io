@@ -1,6 +1,5 @@
 (function() {
     const isMobile = /Mobi|Android/i.test(navigator.userAgent) || navigator.maxTouchPoints > 1;
-
     const cfg = {
         months: [11, 0, 1],
         max: isMobile ? 50 : 200,
@@ -9,12 +8,10 @@
         glows: ['none', '0 0 2px rgba(255,255,255,0.4)', '0 0 4px rgba(255,255,255,0.6)', '0 0 6px rgba(255,255,255,0.8)']
     };
     if (!cfg.months.includes(new Date().getMonth())) return;
-
     const c = document.createElement('div');
     document.body.appendChild(c);
     const m = { x: -1e3, y: -1e3 };
     addEventListener('mousemove', e => { m.x = e.clientX; m.y = e.clientY; });
-
     const cs = () => {
         const s = document.createElement('div');
         s.innerHTML = cfg.chars[~~(Math.random() * cfg.chars.length)];
@@ -34,9 +31,28 @@
             st.r += st.rs;
             st.x += st.vx; st.y += st.vy;
             st.el.style.transform = `translate(${st.x}px, ${st.y}px) rotate(${st.r}deg)`;
-            st.y > innerHeight + 20 ? st.el.remove() : requestAnimationFrame(as);
+            if (st.y > innerHeight + 20) {
+                st.el.remove();
+                return;
+            }
+            requestAnimationFrame(as);
         };
         requestAnimationFrame(as);
     };
-    setInterval(() => c.children.length < cfg.max && cs(), 300);
+    let snowInterval;
+    const startSnow = () => {
+        if (snowInterval) {
+            clearInterval(snowInterval);
+        }
+        const interval = document.hidden ? 2000 : 100;
+        snowInterval = setInterval(() => {
+            if (c.children.length < cfg.max) {
+                cs();
+            }
+        }, interval);
+    };
+    startSnow();
+    document.addEventListener('visibilitychange', () => {
+        startSnow();
+    });
 })();
