@@ -1,5 +1,3 @@
-# .github/workflows/pr-lifecycle.yml
-
 name: 'PR Lifecycle Manager'
 
 on:
@@ -10,11 +8,10 @@ jobs:
   manage-pr:
     runs-on: ubuntu-latest
     permissions:
-      pull-requests: write # Права на управление метками
-      contents: write      # Права на удаление веток
+      pull-requests: write 
+      contents: write
 
     steps:
-      # --- Шаг 1: Назначение и запрос отзыва при открытии PR ---
       - name: Assign and request review on open
         if: github.event.action == 'opened' || github.event.action == 'ready_for_review'
         uses: actions/github-script@v6
@@ -23,25 +20,19 @@ jobs:
             const { owner, repo } = context.repo;
             const pr = context.payload.pull_request;
 
-            // --- НАСТРОЙКИ ---
-            const ASSIGNEE_USERNAME = 'YOUR_USERNAME'; 
-            const REVIEWER_USERNAME = 'REVIEWER_USERNAME'; 
-            // -----------------
+            const ASSIGNEE_USERNAME = 'Fynex-x'; 
+            const REVIEWER_USERNAME = 'Fynex-x'; 
 
-            // Назначаем ответственного
             if (ASSIGNEE_USERNAME !== 'YOUR_USERNAME') {
               await github.rest.issues.addAssignees({ owner, repo, issue_number: pr.number, assignees: [ASSIGNEE_USERNAME] });
             }
 
-            // Запрашиваем ревью
             if (REVIEWER_USERNAME !== 'REVIEWER_USERNAME') {
               await github.rest.pulls.requestReviewers({ owner, repo, pull_number: pr.number, reviewers: [REVIEWER_USERNAME] });
             }
             
-            // Добавляем статус "нужен обзор"
             await github.rest.issues.addLabels({ owner, repo, issue_number: pr.number, labels: ["статус: нужен обзор"] });
 
-      # --- Шаг 2: Управление статусами при назначении ---
       - name: Set 'in progress' on assign
         if: github.event.action == 'assigned'
         uses: actions-ecosystem/action-add-labels@v1
@@ -56,7 +47,6 @@ jobs:
           labels: статус: нужен обзор
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      # --- Шаг 3: Управление статусами и удаление ветки при закрытии ---
       - name: Handle PR close (merge or reject)
         if: github.event.action == 'closed'
         uses: actions/github-script@v6
