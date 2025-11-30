@@ -18,7 +18,7 @@ jobs:
         if: github.event.action == 'opened' || github.event.action == 'ready_for_review'
         uses: actions-ecosystem/action-add-labels@v1
         with:
-          labels: статус: нужен обзор
+          labels: "статус: нужен обзор"
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       # Шаг 2: Добавить метку "статус: сделано" при слиянии PR
@@ -26,7 +26,7 @@ jobs:
         if: github.event.action == 'closed' && github.event.pull_request.merged == true
         uses: actions-ecosystem/action-add-labels@v1
         with:
-          labels: статус: сделано
+          labels: "статус: сделано"
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       # Шаг 3: Добавить метку "статус: отклонено" при закрытии PR без слияния
@@ -34,7 +34,7 @@ jobs:
         if: github.event.action == 'closed' && github.event.pull_request.merged == false
         uses: actions-ecosystem/action-add-labels@v1
         with:
-          labels: статус: отклонено
+          labels: "статус: отклонено"
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       # Шаг 4: Удалить промежуточные метки при закрытии PR
