@@ -15,14 +15,38 @@ javascript:
   - '**/*.tsx'
   - '**/*.mjs'
 
-frontend:
-  - 'src/**'
-  - 'public/**'
+область: сайт:
+  - '**/*.html'
+  - '**/*.css'
+  - '**/*.js'
+  - 'image/**/*'
+  - 'json/**/*'
+  - 'CNAME'
 
-dependencies:
-  - 'package*.json'
-  - 'yarn.lock'
-  - 'pnpm-lock.yaml'
+область: железо:
+  - 'M5stack/**/*'
 
-documentation:
+область: модули:
+  - 'M5stack/**/*'
+
+область: arduino:
+  - 'arduino/**/*'
+
+область: micropython:
+  - 'micropython/**/*'
+
+область: uiflow:
+  - 'uiflow/**/*'
+
+область: софт:
+  - 'soft/**/*'
+
+документация:
   - '**/*.md'
+
+перевод:
+  - '**/i18n/**/*'
+  - '**/locales/**/*'
+  - '**/*.ru.md'
+  - '**/*.en.md'
+  - '**/*.cn.md'
