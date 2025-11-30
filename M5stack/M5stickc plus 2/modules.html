@@ -374,3 +374,755 @@
 
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>M5wiki | Основные модули для M5StickC Plus 2</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="icon" href="/image/m5wiki.png" type="image/png">
+</head>
+<body>
+
+<button id="menu-toggle" class="menu-button">
+  <img src="/image/m5wiki.png" alt="Меню M5Wiki" width="80%">
+</button>
+
+<div id="sidebar-placeholder"></div>
+
+<div class="page-wrapper">
+  <div class="content">
+    <h1>Основные модули для M5StickC Plus 2</h1>
+    <div class="meta">Дата публикации: 28.11.2025 Автор: Fynex_x</div>
+    <div class="file-info" data-file="/M5stack/M5stickc plus 2/modules.html"></div>
+    <script src="/file-info.js"></script>
+
+    <hr>
+    <div class="joke">"Модули для M5StickC Plus 2: что к чему и зачем это всё вообще нужно"</div>
+    <hr>
+
+    <h2>1. CC1101 — диапазон Sub-GHz</h2>
+    <p>Этот модуль работает на частотах ниже 1 ГГц. В этом диапазоне передаются сигналы простых пультов, брелоков ворот и других устройств.</p>
+    <ul>
+      <li><b>Зачем нужен:</b> приём и анализ сигналов 433.92 МГц.</li>
+      <li><b>Особенности:</b> rolling code полноценно не поддерживается.</li>
+      <li><b>Использование:</b> RF → Config → CC1101 On SPI → Scan/copy.</li>
+    </ul>
+      <img src="/image/M5stack/M5stickc plus 2/module/CC1101.png" alt="Подключение M5StickC Plus2 к СС1101" width="40%">
+    <p>подключения</p>
+    <table border="1">
+      <thead>
+      <tr>
+        <th>CC1101</th>
+        <th>M5StickC Plus2</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>GND</td>
+        <td>1</td>
+      </tr>
+      <tr>
+        <td>3V3</td>
+        <td>2</td>
+      </tr>
+      <tr>
+        <td>GDO0</td>
+        <td>3</td>
+      </tr>
+      <tr>
+        <td>CSN</td>
+        <td>4</td>
+      </tr>
+      <tr>
+        <td>SCK</td>
+        <td>5</td>
+      </tr>
+      <tr>
+        <td>MOSI</td>
+        <td>6</td>
+      </tr>
+      <tr>
+        <td>MISO</td>
+        <td>7</td>
+      </tr>
+      <tr>
+        <td>GDO2</td>
+        <td>8</td>
+      </tr>
+    </tbody>
+    </table>
+    <hr>
+    <h2>2. NRF24 — работа на 2.4 ГГц</h2>
+    <p>Модуль работает в том же диапазоне, что Wi-Fi и Bluetooth. С ним M5Stick может отправлять различные пакеты на устройства рядом.</p>
+    <ul>
+      <li><b>Главная функция:</b> работа с BLE и 2.4 ГГц.</li>
+      <li><b>Важно:</b> нужна хорошая антенна и стабильное питание.</li>
+      <li><b>Использование:</b> NRF24 → Jammer 2.4.</li>
+    </ul>
+      <img src="/image/M5stack/M5stickc plus 2/module/nrf24.png" alt="Подключение M5StickC Plus2 к NRF24" width="40%">
+    <table border="1">
+      <thead>
+      <tr>
+        <th>NRF24</th>
+        <th>M5StickC Plus2</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>GND</td>
+        <td>1</td>
+      </tr>
+      <tr>
+        <td>3V3</td>
+        <td>2</td>
+      </tr>
+      <tr>
+        <td>GDO0</td>
+        <td>3</td>
+      </tr>
+      <tr>
+        <td>CSN</td>
+        <td>4</td>
+      </tr>
+      <tr>
+        <td>SCK</td>
+        <td>5</td>
+      </tr>
+      <tr>
+        <td>MOSI</td>
+        <td>6</td>
+      </tr>
+      <tr>
+        <td>MISO</td>
+        <td>7</td>
+      </tr>
+      <tr>
+        <td>GDO2</td>
+        <td>8</td>
+      </tr>
+    </tbody>
+    </table>
+    <hr>
+    <h2>3. IR-модули (передатчик и приёмник)</h2>
+    <p>Инфракрасный канал используется пультами телевизоров, кондиционеров и другой техники. Встроенный передатчик слабый, а приёмника нет вовсе.</p>
+    <ul>
+      <li><b>Функции:</b> отправка и приём IR-команд.</li>
+      <li><b>Рекомендация:</b> выбирать 2-канальный передатчик.</li>
+      <li><b>Использование:</b> IR → Config → TX/RX → G26 → TV-B-Gone.</li>
+    </ul>
+      <img src="/image/M5stack/M5stickc plus 2/module/KY-005.png" alt="Подключение M5StickC Plus2 к KY-005" width="40%">
+      <img src="/image/M5stack/M5stickc plus 2/module/KY-022.png" alt="Подключение M5StickC Plus2 к KY-022" width="40%">
+    <table border="1">
+      <thead>
+      <tr>
+        <th>KY-005</th>
+        <th>M5StickC Plus2</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>GND</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>5V</td>
+        <td>+</td>
+      </tr>
+      <tr>
+        <td>G26</td>
+        <td>3</td>
+      </tr>
+    </tbody>
+    </table>
+    <table border="1">
+      <thead>
+      <tr>
+        <th>KY-022</th>
+        <th>M5StickC Plus2</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>GND</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>5V</td>
+        <td>+</td>
+      </tr>
+      <tr>
+        <td>G26</td>
+        <td>S</td>
+      </tr>
+    </tbody>
+    </table>
+    <hr>
+    <h2>4. PN532 — работа с NFC и RFID</h2>
+    <p>Поддерживаются частоты 125 кГц и 13.56 МГц — домофоны, проездные, пропуска и простые NFC-метки.</p>
+    <ul>
+      <li><b>Что может:</b> считывать и сохранять данные с меток.</li>
+      <li><b>Ограничение:</b> эмуляция современных карт недоступна.</li>
+      <li><b>Использование:</b> RFID → Config → PN532 On i2c → Read Tag.</li>
+    </ul>
+      <img src="/image/M5stack/M5stickc plus 2/module/pn532_i2c.png" alt="Подключение M5StickC Plus2 к pn532_i2c" width="40%">
+      <img src="/image/M5stack/M5stickc plus 2/module/pn532_spi.png" alt="Подключение M5StickC Plus2 к pn532_spi" width="40%">
+    <p>I2C подключение</p>
+    <table border="1">
+      <thead>
+      <tr>
+        <th>pn532</th>
+        <th>M5StickC Plus2</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>GND</td>
+        <td>GND</td>
+      </tr>
+      <tr>
+        <td>5V</td>
+        <td>VCC</td>
+      </tr>
+      <tr>
+        <td>G32</td>
+        <td>SDA</td>
+      </tr>
+      <tr>
+        <td>G33</td>
+        <td>SCL</td>
+      </tr>
+    </tbody>
+    </table>
+    <p>SPI подключение</p>
+    <table border="1">
+      <thead>
+      <tr>
+        <th>pn532</th>
+        <th>M5StickC Plus2</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>SCK</td>
+        <td>G0</td>
+      </tr>
+      <tr>
+        <td>MSO</td>
+        <td>G33</td>
+      </tr>
+      <tr>
+        <td>MOSI</td>
+        <td>G32</td>
+      </tr>
+      <tr>
+        <td>SS</td>
+        <td>G26</td>
+      </tr>
+      <tr>
+        <td>VCC</td>
+        <td>3V3</td>
+      </tr>
+      <tr>
+        <td>GND</td>
+        <td>GND</td>
+      </tr>
+      <tr>
+        <td>IRQ</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>RSTO</td>
+        <td>-</td>
+      </tr>
+    </tbody>
+    </table>
+    <hr>
+    <h2>5. Модуль MicroSD</h2>
+    <p>Позволяет подключить карту памяти для хранения файлов, прошивок и скриптов.</p>
+    <ul>
+      <li><b>Функция:</b> расширение памяти устройства.</li>
+      <li><b>Особенность:</b> требует пайки или макетной платы.</li>
+    </ul>
+      <img src="/image/M5stack/M5stickc plus 2/module/SD Card.png" alt="Подключение M5StickC Plus2 к SD Card" width="40%">
+    <table border="1">
+      <thead>
+      <tr>
+        <th>SD Card</th>
+        <th>M5StickC Plus2</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>3V3</td>
+        <td>3V3</td>
+      </tr>
+      <tr>
+        <td>CS</td>
+        <td>GND</td>
+      </tr>
+      <tr>
+        <td>MOSI</td>
+        <td>G26</td>
+      </tr>
+      <tr>
+        <td>CLK</td>
+        <td>G0</td>
+      </tr>
+      <tr>
+        <td>GND</td>
+        <td>GND</td>
+      </tr>
+    </tbody>
+    </table>
+    <hr>
+    <h2>6. SI4713 — FM-модуль</h2>
+    <p>Позволяет принимать FM-сигналы и транслировать звук со смартфона на FM-частоты через AUX-кабель.</p>
+    <ul>
+      <li><b>Что умеет:</b> передача и приём FM-радио.</li>
+      <li><b>Предупреждение:</b> нужна кнопка или перемычка для запуска.</li>
+      <li><b>Использование:</b> подключить AUX → Brdcast STD → выбрать частоту.</li>
+    </ul>
+      <img src="/image/M5stack/M5stickc plus 2/module/SI4713.png" alt="Подключение M5StickC Plus2 к SI4713" width="40%">
+        <table border="1">
+      <thead>
+      <tr>
+        <th>SI4713</th>
+        <th>M5StickC Plus2</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>RST</td>
+        <td>См. примечание ниже*</td>
+      </tr>
+      <tr>
+        <td>SCL</td>
+        <td>G33</td>
+      </tr>
+      <tr>
+        <td>SDA</td>
+        <td>G32</td>
+      </tr>
+      <tr>
+        <td>GND</td>
+        <td>GND</td>
+      </tr>
+      <tr>
+        <td>VIN</td>
+        <td>5V</td>
+      </tr>
+    </tbody>
+    </table>
+    <p><strong>*Примечание о RST:</strong> Необходимо включить устройство M5StickC, подключить один провод к контакту RST FM-передатчика и быстро коснуться его конца GND для активации RST. Таким образом, нет необходимости использовать SD Card Sniffer или контакт G0 StickC. При желании для этой операции можно также подключить кнопку или резистор.</p>
+  </div>
+    <hr>
+    <div class="subheading">Возможные проблемы</div>
+    <hr>
+    <div class="content">
+        <p><strong>A:</strong> Модуль не определяется или не отвечает на запросы.</p>
+        <p><strong>B:</strong> Проверьте, правильно ли подключены контакты, а также целостность проводов.</p>
+        <p><strong>A:</strong> Стик не включается после установки модуля.</p>
+        <p><strong>B:</strong> Убедитесь, что ни один провод не замыкает другой. Если всё в порядке, отключите модуль. Если стик работает нормально, проверьте конфигурацию модуля, правильно ли они установлены, если это не помогло, то модуль, скорее всего, неисправлен.</p>
+        <p><strong>A:</strong> Сигнал слабый, пакеты теряются, передача ИК или RF нестабильна.</p>
+        <p><strong>B:</strong> Обычно это связано с плохой антенной или неправильной ориентацией устройства. Попробуйте установить внешнюю антенну или выбрать более мощный модуль.</p>
+        <p><strong>A:</strong> ИК-приёмник или передатчик реагируют только на очень близкие дистанции.</p>
+        <p><strong>B:</strong> Возможна слабая мощность диода или помехи. Используйте более мощный передатчик или уберите препятствия перед ИК-окном.</p>
+    </div>
+    <hr>
+    <div class="joke">Итог</div>
+    <hr>
+    <p>M5StickC Plus 2 раскрывается только через модули. Хотите изучать радиосигналы — берите CC1101. Нужен диапазон 2.4 ГГц — NRF24. IR-управление, NFC-метки, MicroSD, FM-радио — всё расширяется модулями.</p>
+    <div class="joke">"Этот маленький гаджет становится мощным только тогда, когда вы добавляете к нему правильные дополнения."</div>
+
+  </div>
+</div>
+
+<div id="footer-placeholder"></div>
+
+<script>
+  window.SHOW_BANNER = '0';
+</script>
+<script src="/banner-system.js"></script>
+<script src="/script.js"></script>
+<script src="/snow.js"></script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>M5wiki | Основные модули для M5StickC Plus 2</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="icon" href="/image/m5wiki.png" type="image/png">
+</head>
+<body>
+
+<button id="menu-toggle" class="menu-button">
+  <img src="/image/m5wiki.png" alt="Меню M5Wiki" width="80%">
+</button>
+
+<div id="sidebar-placeholder"></div>
+
+<div class="page-wrapper">
+  <div class="content">
+    <h1>Основные модули для M5StickC Plus 2</h1>
+    <div class="meta">Дата публикации: 28.11.2025 Автор: Fynex_x</div>
+    <div class="file-info" data-file="/M5stack/M5stickc plus 2/modules.html"></div>
+    <script src="/file-info.js"></script>
+
+    <hr>
+    <div class="joke">"Модули для M5StickC Plus 2: что к чему и зачем это всё вообще нужно"</div>
+    <hr>
+
+    <h2>1. CC1101 — диапазон Sub-GHz</h2>
+    <p>Этот модуль работает на частотах ниже 1 ГГц. В этом диапазоне передаются сигналы простых пультов, брелоков ворот и других устройств.</p>
+    <ul>
+      <li><b>Зачем нужен:</b> приём и анализ сигналов 433.92 МГц.</li>
+      <li><b>Особенности:</b> rolling code полноценно не поддерживается.</li>
+      <li><b>Использование:</b> RF → Config → CC1101 On SPI → Scan/copy.</li>
+    </ul>
+      <img src="/image/M5stack/M5stickc plus 2/module/CC1101.png" alt="Подключение M5StickC Plus2 к СС1101" width="40%">
+    <p>подключения</p>
+    <table border="1">
+      <thead>
+      <tr>
+        <th>CC1101</th>
+        <th>M5StickC Plus2</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>GND</td>
+        <td>1</td>
+      </tr>
+      <tr>
+        <td>3V3</td>
+        <td>2</td>
+      </tr>
+      <tr>
+        <td>GDO0</td>
+        <td>3</td>
+      </tr>
+      <tr>
+        <td>CSN</td>
+        <td>4</td>
+      </tr>
+      <tr>
+        <td>SCK</td>
+        <td>5</td>
+      </tr>
+      <tr>
+        <td>MOSI</td>
+        <td>6</td>
+      </tr>
+      <tr>
+        <td>MISO</td>
+        <td>7</td>
+      </tr>
+      <tr>
+        <td>GDO2</td>
+        <td>8</td>
+      </tr>
+    </tbody>
+    </table>
+    <hr>
+    <h2>2. NRF24 — работа на 2.4 ГГц</h2>
+    <p>Модуль работает в том же диапазоне, что Wi-Fi и Bluetooth. С ним M5Stick может отправлять различные пакеты на устройства рядом.</p>
+    <ul>
+      <li><b>Главная функция:</b> работа с BLE и 2.4 ГГц.</li>
+      <li><b>Важно:</b> нужна хорошая антенна и стабильное питание.</li>
+      <li><b>Использование:</b> NRF24 → Jammer 2.4.</li>
+    </ul>
+      <img src="/image/M5stack/M5stickc plus 2/module/nrf24.png" alt="Подключение M5StickC Plus2 к NRF24" width="40%">
+    <table border="1">
+      <thead>
+      <tr>
+        <th>NRF24</th>
+        <th>M5StickC Plus2</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>GND</td>
+        <td>1</td>
+      </tr>
+      <tr>
+        <td>3V3</td>
+        <td>2</td>
+      </tr>
+      <tr>
+        <td>GDO0</td>
+        <td>3</td>
+      </tr>
+      <tr>
+        <td>CSN</td>
+        <td>4</td>
+      </tr>
+      <tr>
+        <td>SCK</td>
+        <td>5</td>
+      </tr>
+      <tr>
+        <td>MOSI</td>
+        <td>6</td>
+      </tr>
+      <tr>
+        <td>MISO</td>
+        <td>7</td>
+      </tr>
+      <tr>
+        <td>GDO2</td>
+        <td>8</td>
+      </tr>
+    </tbody>
+    </table>
+    <hr>
+    <h2>3. IR-модули (передатчик и приёмник)</h2>
+    <p>Инфракрасный канал используется пультами телевизоров, кондиционеров и другой техники. Встроенный передатчик слабый, а приёмника нет вовсе.</p>
+    <ul>
+      <li><b>Функции:</b> отправка и приём IR-команд.</li>
+      <li><b>Рекомендация:</b> выбирать 2-канальный передатчик.</li>
+      <li><b>Использование:</b> IR → Config → TX/RX → G26 → TV-B-Gone.</li>
+    </ul>
+      <img src="/image/M5stack/M5stickc plus 2/module/KY-005.png" alt="Подключение M5StickC Plus2 к KY-005" width="40%">
+      <img src="/image/M5stack/M5stickc plus 2/module/KY-022.png" alt="Подключение M5StickC Plus2 к KY-022" width="40%">
+    <table border="1">
+      <thead>
+      <tr>
+        <th>KY-005</th>
+        <th>M5StickC Plus2</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>GND</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>5V</td>
+        <td>+</td>
+      </tr>
+      <tr>
+        <td>G26</td>
+        <td>3</td>
+      </tr>
+    </tbody>
+    </table>
+    <table border="1">
+      <thead>
+      <tr>
+        <th>KY-022</th>
+        <th>M5StickC Plus2</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>GND</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>5V</td>
+        <td>+</td>
+      </tr>
+      <tr>
+        <td>G26</td>
+        <td>S</td>
+      </tr>
+    </tbody>
+    </table>
+    <hr>
+    <h2>4. PN532 — работа с NFC и RFID</h2>
+    <p>Поддерживаются частоты 125 кГц и 13.56 МГц — домофоны, проездные, пропуска и простые NFC-метки.</p>
+    <ul>
+      <li><b>Что может:</b> считывать и сохранять данные с меток.</li>
+      <li><b>Ограничение:</b> эмуляция современных карт недоступна.</li>
+      <li><b>Использование:</b> RFID → Config → PN532 On i2c → Read Tag.</li>
+    </ul>
+      <img src="/image/M5stack/M5stickc plus 2/module/pn532_i2c.png" alt="Подключение M5StickC Plus2 к pn532_i2c" width="40%">
+      <img src="/image/M5stack/M5stickc plus 2/module/pn532_spi.png" alt="Подключение M5StickC Plus2 к pn532_spi" width="40%">
+    <p>I2C подключение</p>
+    <table border="1">
+      <thead>
+      <tr>
+        <th>pn532</th>
+        <th>M5StickC Plus2</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>GND</td>
+        <td>GND</td>
+      </tr>
+      <tr>
+        <td>5V</td>
+        <td>VCC</td>
+      </tr>
+      <tr>
+        <td>G32</td>
+        <td>SDA</td>
+      </tr>
+      <tr>
+        <td>G33</td>
+        <td>SCL</td>
+      </tr>
+    </tbody>
+    </table>
+    <p>SPI подключение</p>
+    <table border="1">
+      <thead>
+      <tr>
+        <th>pn532</th>
+        <th>M5StickC Plus2</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>SCK</td>
+        <td>G0</td>
+      </tr>
+      <tr>
+        <td>MSO</td>
+        <td>G33</td>
+      </tr>
+      <tr>
+        <td>MOSI</td>
+        <td>G32</td>
+      </tr>
+      <tr>
+        <td>SS</td>
+        <td>G26</td>
+      </tr>
+      <tr>
+        <td>VCC</td>
+        <td>3V3</td>
+      </tr>
+      <tr>
+        <td>GND</td>
+        <td>GND</td>
+      </tr>
+      <tr>
+        <td>IRQ</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>RSTO</td>
+        <td>-</td>
+      </tr>
+    </tbody>
+    </table>
+    <hr>
+    <h2>5. Модуль MicroSD</h2>
+    <p>Позволяет подключить карту памяти для хранения файлов, прошивок и скриптов.</p>
+    <ul>
+      <li><b>Функция:</b> расширение памяти устройства.</li>
+      <li><b>Особенность:</b> требует пайки или макетной платы.</li>
+    </ul>
+      <img src="/image/M5stack/M5stickc plus 2/module/SD Card.png" alt="Подключение M5StickC Plus2 к SD Card" width="40%">
+    <table border="1">
+      <thead>
+      <tr>
+        <th>SD Card</th>
+        <th>M5StickC Plus2</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>3V3</td>
+        <td>3V3</td>
+      </tr>
+      <tr>
+        <td>CS</td>
+        <td>GND</td>
+      </tr>
+      <tr>
+        <td>MOSI</td>
+        <td>G26</td>
+      </tr>
+      <tr>
+        <td>CLK</td>
+        <td>G0</td>
+      </tr>
+      <tr>
+        <td>GND</td>
+        <td>GND</td>
+      </tr>
+    </tbody>
+    </table>
+    <hr>
+    <h2>6. SI4713 — FM-модуль</h2>
+    <p>Позволяет принимать FM-сигналы и транслировать звук со смартфона на FM-частоты через AUX-кабель.</p>
+    <ul>
+      <li><b>Что умеет:</b> передача и приём FM-радио.</li>
+      <li><b>Предупреждение:</b> нужна кнопка или перемычка для запуска.</li>
+      <li><b>Использование:</b> подключить AUX → Brdcast STD → выбрать частоту.</li>
+    </ul>
+      <img src="/image/M5stack/M5stickc plus 2/module/SI4713.png" alt="Подключение M5StickC Plus2 к SI4713" width="40%">
+        <table border="1">
+      <thead>
+      <tr>
+        <th>SI4713</th>
+        <th>M5StickC Plus2</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>RST</td>
+        <td>См. примечание ниже*</td>
+      </tr>
+      <tr>
+        <td>SCL</td>
+        <td>G33</td>
+      </tr>
+      <tr>
+        <td>SDA</td>
+        <td>G32</td>
+      </tr>
+      <tr>
+        <td>GND</td>
+        <td>GND</td>
+      </tr>
+      <tr>
+        <td>VIN</td>
+        <td>5V</td>
+      </tr>
+    </tbody>
+    </table>
+    <p><strong>*Примечание о RST:</strong> Необходимо включить устройство M5StickC, подключить один провод к контакту RST FM-передатчика и быстро коснуться его конца GND для активации RST. Таким образом, нет необходимости использовать SD Card Sniffer или контакт G0 StickC. При желании для этой операции можно также подключить кнопку или резистор.</p>
+  </div>
+    <hr>
+    <div class="subheading">Возможные проблемы</div>
+    <hr>
+    <div class="content">
+        <p><strong>A:</strong> Модуль не определяется или не отвечает на запросы.</p>
+        <p><strong>B:</strong> Проверьте, правильно ли подключены контакты, а также целостность проводов.</p>
+        <p><strong>A:</strong> Стик не включается после установки модуля.</p>
+        <p><strong>B:</strong> Убедитесь, что ни один провод не замыкает другой. Если всё в порядке, отключите модуль. Если стик работает нормально, проверьте конфигурацию модуля, правильно ли они установлены, если это не помогло, то модуль, скорее всего, неисправлен.</p>
+        <p><strong>A:</strong> Сигнал слабый, пакеты теряются, передача ИК или RF нестабильна.</p>
+        <p><strong>B:</strong> Обычно это связано с плохой антенной или неправильной ориентацией устройства. Попробуйте установить внешнюю антенну или выбрать более мощный модуль.</p>
+        <p><strong>A:</strong> ИК-приёмник или передатчик реагируют только на очень близкие дистанции.</p>
+        <p><strong>B:</strong> Возможна слабая мощность диода или помехи. Используйте более мощный передатчик или уберите препятствия перед ИК-окном.</p>
+    </div>
+    <hr>
+    <div class="joke">Итог</div>
+    <hr>
+    <p>M5StickC Plus 2 раскрывается только через модули. Хотите изучать радиосигналы — берите CC1101. Нужен диапазон 2.4 ГГц — NRF24. IR-управление, NFC-метки, MicroSD, FM-радио — всё расширяется модулями.</p>
+    <div class="joke">"Этот маленький гаджет становится мощным только тогда, когда вы добавляете к нему правильные дополнения."</div>
+
+  </div>
+</div>
+
+<div id="footer-placeholder"></div>
+
+<script>
+  window.SHOW_BANNER = '0';
+</script>
+<script src="/banner-system.js"></script>
+<script src="/script.js"></script>
+<script src="/snow.js"></script>
+
+</body>
+</html>
