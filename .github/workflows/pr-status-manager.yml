@@ -1,0 +1,48 @@
+# .github/workflows/pr-status-manager.yml
+
+name: 'PR Status Manager'
+
+on:
+  pull_request:
+    types: [opened, ready_for_review, closed]
+
+jobs:
+  manage-status:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+
+    steps:
+      # Шаг 1: Добавить метку "статус: нужен обзор" при открытии PR
+      - name: Add 'needs review' label
+        if: github.event.action == 'opened' || github.event.action == 'ready_for_review'
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          labels: статус: нужен обзор
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Шаг 2: Добавить метку "статус: сделано" при слиянии PR
+      - name: Add 'done' label on merge
+        if: github.event.action == 'closed' && github.event.pull_request.merged == true
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          labels: статус: сделано
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Шаг 3: Добавить метку "статус: отклонено" при закрытии PR без слияния
+      - name: Add 'rejected' label on close
+        if: github.event.action == 'closed' && github.event.pull_request.merged == false
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          labels: статус: отклонено
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Шаг 4: Удалить промежуточные метки при закрытии PR
+      - name: Remove intermediate labels on close
+        if: github.event.action == 'closed'
+        uses: actions-ecosystem/action-remove-labels@v1
+        with:
+          labels: |
+            статус: нужен обзор
+            статус: в работе
+          github_token: ${{ secrets.GITHUB_TOKEN }}
