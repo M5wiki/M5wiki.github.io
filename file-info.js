@@ -12,7 +12,7 @@ async function loadFileInfo() {
     try {
         const response = await fetch(apiURL);
         const commits = await response.json();
-
+ 
         if (!commits.length) {
             container.textContent = "Данные о файле не найдены.";
             return;
