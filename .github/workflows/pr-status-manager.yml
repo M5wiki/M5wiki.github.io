@@ -1,3 +1,5 @@
+# .github/workflows/pr-lifecycle.yml
+
 name: 'PR Lifecycle Manager'
 
 on:
@@ -8,46 +10,43 @@ jobs:
   manage-pr:
     runs-on: ubuntu-latest
     permissions:
-      pull-requests: write 
+      pull-requests: write
       contents: write
 
     steps:
-      - name: Assign and request review on open
+      - name: Initial PR setup
         if: github.event.action == 'opened' || github.event.action == 'ready_for_review'
         uses: actions/github-script@v6
         with:
           script: |
             const { owner, repo } = context.repo;
             const pr = context.payload.pull_request;
-
-            const ASSIGNEE_USERNAME = 'Fynex-x'; 
-            const REVIEWER_USERNAME = 'Fynex-x'; 
+            const ASSIGNEE_USERNAME = 'Fynex-x';
+            const REVIEWER_USERNAME = 'Fynex-x';
 
             if (ASSIGNEE_USERNAME !== 'YOUR_USERNAME') {
               await github.rest.issues.addAssignees({ owner, repo, issue_number: pr.number, assignees: [ASSIGNEE_USERNAME] });
             }
-
             if (REVIEWER_USERNAME !== 'REVIEWER_USERNAME') {
               await github.rest.pulls.requestReviewers({ owner, repo, pull_number: pr.number, reviewers: [REVIEWER_USERNAME] });
             }
-            
             await github.rest.issues.addLabels({ owner, repo, issue_number: pr.number, labels: ["статус: нужен обзор"] });
 
       - name: Set 'in progress' on assign
         if: github.event.action == 'assigned'
         uses: actions-ecosystem/action-add-labels@v1
         with:
-          labels: статус: в работе
+          labels: "статус: в работе"
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Remove 'needs review' on assign
         if: github.event.action == 'assigned'
         uses: actions-ecosystem/action-remove-labels@v1
         with:
-          labels: статус: нужен обзор
+          labels: "статус: нужен обзор"
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Handle PR close (merge or reject)
+      - name: Handle PR close
         if: github.event.action == 'closed'
         uses: actions/github-script@v6
         with:
@@ -55,8 +54,8 @@ jobs:
             const { owner, repo } = context.repo;
             const pr = context.payload.pull_request;
             const isMerged = pr.merged;
-            
             const finalLabel = isMerged ? "статус: сделано" : "статус: отклонено";
+            
             await github.rest.issues.addLabels({ owner, repo, issue_number: pr.number, labels: [finalLabel] });
             
             const labelsToRemove = ["статус: нужен обзор", "статус: в работе"];
