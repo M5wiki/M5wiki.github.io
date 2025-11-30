@@ -1,4 +1,3 @@
-
 name: 'PR Status Manager'
 
 on:
@@ -16,7 +15,6 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const context = github.context;
             const pull_request = context.payload.pull_request;
             const owner = context.repo.owner;
             const repo = context.repo.repo;
@@ -48,7 +46,6 @@ jobs:
                 }
               }
             }
-
 
             if (context.payload.action === 'opened' || context.payload.action === 'ready_for_review') {
               const currentLabels = pull_request.labels.map(l => l.name);
