@@ -1,43 +1,81 @@
-# .github/workflows/pr-status-manager.yml
-
-name: 'PR Status Manager'
+name: 'PR Status and Assignment Manager'
 
 on:
   pull_request:
-    types: [opened, ready_for_review, closed]
+    types: [opened, ready_for_review, assigned, closed]
 
 jobs:
-  manage-status:
+  manage-pr:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
+      contents: write
 
     steps:
-      # Шаг 1: Добавить метку "статус: нужен обзор" при открытии PR
-      - name: Add 'needs review' label
+      - name: Analyze PR, assign and request review
         if: github.event.action == 'opened' || github.event.action == 'ready_for_review'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const issue_number = context.payload.pull_request.number;
+            const pr = context.payload.pull_request;
+
+            const ASSIGNEE_USERNAME = 'Fynex-x'; 
+            const REVIEWER_USERNAME = 'Fynex-x'; 
+            const SIZE_SMALL_THRESHOLD = 50;
+            const SIZE_MEDIUM_THRESHOLD = 200;
+
+            const additions = pr.additions;
+            const deletions = pr.deletions;
+            const totalChanges = additions + deletions;
+            
+            let sizeLabel = 'размер: малый';
+            if (totalChanges > SIZE_MEDIUM_THRESHOLD) {
+              sizeLabel = 'размер: большой';
+            } else if (totalChanges > SIZE_SMALL_THRESHOLD) {
+              sizeLabel = 'размер: средний';
+            }
+            
+            const labelsToAdd = [sizeLabel, "статус: нужен обзор"];
+            await github.rest.issues.addLabels({ owner, repo, issue_number, labels: labelsToAdd });
+
+            if (ASSIGNEE_USERNAME !== 'YOUR_USERNAME') {
+              await github.rest.issues.addAssignees({ owner, repo, issue_number, assignees: [ASSIGNEE_USERNAME] });
+            }
+
+            if (REVIEWER_USERNAME !== 'REVIEWER_USERNAME') {
+              await github.rest.pulls.requestReviewers({ owner, repo, pull_number: issue_number, reviewers: [REVIEWER_USERNAME] });
+            }
+
+      - name: Set 'in progress' on assign
+        if: github.event.action == 'assigned'
         uses: actions-ecosystem/action-add-labels@v1
         with:
-          labels: "статус: нужен обзор"
+          labels: статус: в работе
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      # Шаг 2: Добавить метку "статус: сделано" при слиянии PR
+      - name: Remove 'needs review' on assign
+        if: github.event.action == 'assigned'
+        uses: actions-ecosystem/action-remove-labels@v1
+        with:
+          labels: статус: нужен обзор
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Add 'done' label on merge
         if: github.event.action == 'closed' && github.event.pull_request.merged == true
         uses: actions-ecosystem/action-add-labels@v1
         with:
-          labels: "статус: сделано"
+          labels: статус: сделано
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      # Шаг 3: Добавить метку "статус: отклонено" при закрытии PR без слияния
       - name: Add 'rejected' label on close
         if: github.event.action == 'closed' && github.event.pull_request.merged == false
         uses: actions-ecosystem/action-add-labels@v1
         with:
-          labels: "статус: отклонено"
+          labels: статус: отклонено
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      # Шаг 4: Удалить промежуточные метки при закрытии PR
       - name: Remove intermediate labels on close
         if: github.event.action == 'closed'
         uses: actions-ecosystem/action-remove-labels@v1
@@ -45,4 +83,14 @@ jobs:
           labels: |
             статус: нужен обзор
             статус: в работе
+            размер: малый
+            размер: средний
+            размер: большой
           github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Delete branch after merge
+        if: github.event.action == 'closed' && github.event.pull_request.merged == true
+        uses: dawidd6/action-delete-branch@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branches: ${{ github.head_ref }}
