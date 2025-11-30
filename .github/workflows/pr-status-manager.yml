@@ -36,14 +36,14 @@ jobs:
         if: github.event.action == 'assigned'
         uses: actions-ecosystem/action-add-labels@v1
         with:
-          labels: "статус: в работе"
+          labels: статус: в работе
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Remove 'needs review' on assign
         if: github.event.action == 'assigned'
         uses: actions-ecosystem/action-remove-labels@v1
         with:
-          labels: "статус: нужен обзор"
+          labels: статус: нужен обзор
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Handle PR close
