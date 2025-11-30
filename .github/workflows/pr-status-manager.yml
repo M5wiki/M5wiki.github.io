@@ -11,4 +11,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Print Hello World
-        run: echo "Workflow is running correctly for PR #${{ github.event.number }}"
+        run: |
+          echo "Workflow is running correctly for PR #${{ github.event.number }}"
