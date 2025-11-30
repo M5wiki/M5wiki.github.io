@@ -35,45 +35,4 @@ jobs:
               for (const labelToRemove of labelsToRemove) {
                 await github.rest.issues.removeLabel({ owner, repo, issue_number, name: labelToRemove }).catch(() => {});
               }
-            }              if (!current_labels.includes("статус: в работе")) {
-                await addLabel("статус: нужен обзор");
-              }
-            } else if (action === 'closed') {
-              if (is_merged) {
-                await addLabel("статус: сделано");
-              } else {
-                await addLabel("статус: отклонено");
-              }
-              await removeLabel("статус: нужен обзор");
-              await removeLabel("статус: в работе");
-            }              if (context.payload.pull_request.merged) {
-                await addLabel("статус: сделано");
-              } else {
-                await addLabel("статус: отклонено");
-              }
-            }
-              for (const labelToRemove of labelsToRemove) {
-                if (currentLabels.includes(labelToRemove)) {
-                  await github.rest.issues.removeLabel({
-                    owner,
-                    repo,
-                    issue_number: pr_number,
-                    name: labelToRemove
-                  });
-                }
-              }
-            }
-
-            if (context.payload.action === 'opened' || context.payload.action === 'ready_for_review') {
-              const currentLabels = pull_request.labels.map(l => l.name);
-              if (!currentLabels.includes("статус: в работе")) {
-                await setStatusLabel("статус: нужен обзор");
-              }
-
-            } else if (context.payload.action === 'closed') {
-              if (pull_request.merged) {
-                await setStatusLabel("статус: сделано");
-              } else {
-                await setStatusLabel("статус: отклонено");
-              }
             }
