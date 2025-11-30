@@ -23,13 +23,14 @@ jobs:
             const pr = context.payload.pull_request;
             const ASSIGNEE_USERNAME = 'Fynex-x';
             const REVIEWER_USERNAME = 'Fynex-x';
+            const PR_AUTHOR = pr.user.login;
 
-            if (ASSIGNEE_USERNAME !== 'YOUR_USERNAME') {
-              await github.rest.issues.addAssignees({ owner, repo, issue_number: pr.number, assignees: [ASSIGNEE_USERNAME] });
-            }
-            if (REVIEWER_USERNAME !== 'REVIEWER_USERNAME') {
+            await github.rest.issues.addAssignees({ owner, repo, issue_number: pr.number, assignees: [ASSIGNEE_USERNAME] });
+
+            if (REVIEWER_USERNAME !== PR_AUTHOR) {
               await github.rest.pulls.requestReviewers({ owner, repo, pull_number: pr.number, reviewers: [REVIEWER_USERNAME] });
             }
+
             await github.rest.issues.addLabels({ owner, repo, issue_number: pr.number, labels: ["статус: нужен обзор"] });
 
       - name: Set 'in progress' on assign
