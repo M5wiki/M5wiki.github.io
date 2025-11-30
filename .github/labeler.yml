@@ -1,0 +1,28 @@
+html:
+  - '**/*.html'
+  - '**/*.htm'
+
+css:
+  - '**/*.css'
+  - '**/*.scss'
+  - '**/*.sass'
+  - '**/*.less'
+
+javascript:
+  - '**/*.js'
+  - '**/*.jsx'
+  - '**/*.ts'
+  - '**/*.tsx'
+  - '**/*.mjs'
+
+frontend:
+  - 'src/**'
+  - 'public/**'
+
+dependencies:
+  - 'package*.json'
+  - 'yarn.lock'
+  - 'pnpm-lock.yaml'
+
+documentation:
+  - '**/*.md'
