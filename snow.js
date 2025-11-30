@@ -2,7 +2,8 @@
     const isMobile = /Mobi|Android/i.test(navigator.userAgent) || navigator.maxTouchPoints > 1;
     const cfg = {
         months: [11, 0, 1],
-        max: isMobile ? 50 : 200,
+        max: isMobile ? 30 : 200,
+        spawnChance: isMobile ? 0.4 : 0.6,
         chars: ['❄', '❅', '❆', '✻', '✼', '❉', '❋', '✱', '✲', '✳', '•', '·', '✦', '✧', '⋆', '✶', '✴', '✵', '❈', '❊', '✷', '✸', '*', '˖', '˙'],
         colors: ['#FFFFFF', '#F0F8FF', '#E6E6FA', '#F5F5F5'],
         glows: ['none', '0 0 2px rgba(255,255,255,0.4)', '0 0 4px rgba(255,255,255,0.6)', '0 0 6px rgba(255,255,255,0.8)']
@@ -35,6 +36,27 @@
                 st.el.remove();
                 return;
             }
+            requestAnimationFrame(as);
+        };
+        requestAnimationFrame(as);
+    };
+    let snowInterval;
+    const startSnow = () => {
+        if (snowInterval) {
+            clearInterval(snowInterval);
+        }
+        const interval = document.hidden ? 2000 : 100;
+        snowInterval = setInterval(() => {
+            if (c.children.length < cfg.max && Math.random() < cfg.spawnChance) {
+                cs();
+            }
+        }, interval);
+    };
+    startSnow();
+    document.addEventListener('visibilitychange', () => {
+        startSnow();
+    });
+})();            }
             requestAnimationFrame(as);
         };
         requestAnimationFrame(as);
