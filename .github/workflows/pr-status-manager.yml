@@ -15,26 +15,37 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const owner = context.repo.owner;
-            const repo = context.repo.repo;
-            const pr_number = context.payload.pull_request.number;
+            const { owner, repo } = context.repo;
+            const issue_number = context.payload.pull_request.number;
+            const action = context.payload.action;
+            const is_merged = context.payload.pull_request.merged;
+            const current_labels = context.payload.pull_request.labels.map(l => l.name);
 
-            const addLabel = (label) => github.rest.issues.addLabels({ owner, repo, issue_number: pr_number, labels: [label] });
-            // .catch(() => {}) нужен, чтобы скрипт не падал с ошибкой, если пытается удалить несуществующую метку
-            const removeLabel = (label) => github.rest.issues.removeLabel({ owner, repo, issue_number: pr_number, name: label }).catch(() => {});
+            const addLabel = async (label) => {
+              if (!current_labels.includes(label)) {
+                await github.rest.issues.addLabels({ owner, repo, issue_number, labels: [label] });
+              }
+            };
 
-            if (context.payload.action === 'opened' || context.payload.action === 'ready_for_review') {
-              const currentLabels = context.payload.pull_request.labels.map(l => l.name);
-              if (!currentLabels.includes("статус: в работе")) {
+            const removeLabel = async (label) => {
+              if (current_labels.includes(label)) {
+                await github.rest.issues.removeLabel({ owner, repo, issue_number, name: label });
+              }
+            };
+
+            if (action === 'opened' || action === 'ready_for_review') {
+              if (!current_labels.includes("статус: в работе")) {
                 await addLabel("статус: нужен обзор");
               }
-            } else if (context.payload.action === 'closed') {
-              // Сначала удаляем промежуточные статусы
+            } else if (action === 'closed') {
+              if (is_merged) {
+                await addLabel("статус: сделано");
+              } else {
+                await addLabel("статус: отклонено");
+              }
               await removeLabel("статус: нужен обзор");
               await removeLabel("статус: в работе");
-
-              // Затем добавляем финальный статус
-              if (context.payload.pull_request.merged) {
+            }              if (context.payload.pull_request.merged) {
                 await addLabel("статус: сделано");
               } else {
                 await addLabel("статус: отклонено");
