@@ -9,7 +9,7 @@
     },
     "description": "Случайно нажал «Создать вики» — теперь вот руковожу этим хаосом. Добро пожаловать!",
     "role": "главный админ",
-    "avatar": "https://raw.githubusercontent.com/M5wiki/M5wikicode/main/image/admin/Fynex.png"
+    "avatar": "/image/admin/Fynex.png"
   },
   {
     "id": "Samsung_kn0x",
@@ -21,7 +21,7 @@
     },
     "description": "Описание нету.",
     "role": "старший админ",
-    "avatar": "https://raw.githubusercontent.com/M5wiki/M5wikicode/main/image/admin/Samsung_kn0x.png"
+    "avatar": "/image/admin/Samsung_kn0x.png"
   },
   {
     "id": "krrivoy",
@@ -33,6 +33,6 @@
     },
     "description": "Описание нету.",
     "role": "старший админ",
-    "avatar": "https://raw.githubusercontent.com/M5wiki/M5wikicode/main/image/admin/Wantdiesmch.jpg"
+    "avatar": "/image/admin/Wantdiesmch.jpg"
   }
 ]
