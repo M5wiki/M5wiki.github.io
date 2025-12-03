@@ -1,50 +1,71 @@
 const API_URL = 'https://empty-bonus-537d.turishevkirill.workers.dev/stats';
 
-const leaderboardElement = document.getElementById('leaderboard');
+const chartContainer = document.getElementById('leaderboard-chart');
+const lastUpdatedText = document.getElementById('last-updated-text');
 
-async function fetchLeaderboard() {
-    try {
-        const response = await fetch(API_URL);
-        if (!response.ok) {
-            throw new Error(`Ошибка сети: ${response.statusText}`);
+if (chartContainer) {
+    async function fetchLeaderboard() {
+        try {
+            const response = await fetch(API_URL);
+            if (!response.ok) {
+                throw new Error(`Ошибка сети: ${response.statusText}`);
+            }
+            const players = await response.json();
+            renderLeaderboard(players);
+            updateLastUpdatedTime();
+        } catch (error) {
+            console.error("Не удалось получить статистику:", error);
+            chartContainer.innerHTML = '<div class="loading">😵 Не удалось загрузить статистику.</div>';
         }
-        const players = await response.json();
-        renderLeaderboard(players);
-    } catch (error) {
-        console.error("Не удалось получить статистику:", error);
-        leaderboardElement.innerHTML = '<div class="loading">😵 Не удалось загрузить статистику. Попробуйте позже.</div>';
-    }
-}
-
-function renderLeaderboard(players) {
-    if (!players || players.length === 0) {
-        leaderboardElement.innerHTML = '<div class="loading">🎄 Таблица лидеров пока пуста!</div>';
-        return;
     }
 
-    leaderboardElement.innerHTML = '';
+    function renderLeaderboard(players) {
+        if (!players || players.length === 0) {
+            chartContainer.innerHTML = '<div class="loading">🎄 Таблица лидеров пока пуста!</div>';
+            return;
+        }
 
-    players.forEach((player, index) => {
-        const playerDiv = document.createElement('div');
-        playerDiv.classList.add('player');
+        // Находим максимальный счет для масштабирования столбиков
+        const maxScore = Math.max(...players.map(p => p.baubles));
 
-        const rank = index + 1;
-        let rankDisplay = rank;
-        if (rank === 1) rankDisplay = '🥇';
-        else if (rank === 2) rankDisplay = '🥈';
-        else if (rank === 3) rankDisplay = '🥉';
+        // Ограничиваем отображение топ-15 для лучшей читаемости
+        const topPlayers = players.slice(0, 15);
 
-        playerDiv.innerHTML = `
-            <span class="rank">${rankDisplay}</span>
-            <span class="name">${player.first_name}</span>
-            <span class="score">${player.baubles.toLocaleString('ru-RU')} 🎁</span>
-        `;
-        leaderboardElement.appendChild(playerDiv);
-    });
+        chartContainer.innerHTML = ''; // Очищаем контейнер
+
+        topPlayers.forEach((player, index) => {
+            const barElement = document.createElement('div');
+            barElement.classList.add('bar');
+            // Добавляем задержку для анимации появления каждого следующего столбика
+            barElement.style.animationDelay = `${index * 0.1}s`;
+
+            const barWidth = maxScore > 0 ? (player.baubles / maxScore) * 100 : 0;
+
+            barElement.innerHTML = `
+                <div class="bar-info">
+                    <span class="bar-name">${player.first_name}</span>
+                    <span class="bar-score">${player.baubles.toLocaleString('ru-RU')} 🎁</span>
+                </div>
+                <div class="bar-track">
+                    <div class="bar-fill" style="width: ${barWidth}%"></div>
+                </div>
+            `;
+            chartContainer.appendChild(barElement);
+        });
+    }
+
+    function updateLastUpdatedTime() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        lastUpdatedText.textContent = `Последнее обновление: ${timeString}`;
+    }
+
+    // Загружаем статистику при загрузке страницы
+    document.addEventListener('DOMContentLoaded', fetchLeaderboard);
+
+    // Обновляем статистику каждые 30 секунд для "прямого эфира"
+    setInterval(fetchLeaderboard, 30000);
+
+} else {
+    console.error("Контейнер для таблицы лидеров #leaderboard-chart не найден на странице.");
 }
-
-// Загружаем статистику при загрузке страницы
-document.addEventListener('DOMContentLoaded', fetchLeaderboard);
-
-// Обновляем статистику каждые 30 секунд
-setInterval(fetchLeaderboard, 30000);
