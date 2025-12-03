@@ -20,36 +20,44 @@ if (chartContainer) {
         }
     }
 
-    function renderLeaderboard(players) {
-        if (!players || players.length === 0) {
-            chartContainer.innerHTML = '<div class="loading">🎄 Таблица лидеров пока пуста!</div>';
-            return;
-        }
-
-        const maxScore = Math.max(...players.map(p => p.baubles));
-        const topPlayers = players.slice(0, 15);
-
-        chartContainer.innerHTML = '';
-
-        topPlayers.forEach((player, index) => {
-            const barElement = document.createElement('div');
-            barElement.classList.add('bar');
-            barElement.style.animationDelay = `${index * 0.1}s`;
-
-            const barWidth = maxScore > 0 ? (player.baubles / maxScore) * 100 : 0;
-
-            barElement.innerHTML = `
-                <div class="bar-info">
-                    <span class="bar-name">${player.first_name}</span>
-                    <span class="bar-score">${player.baubles.toLocaleString('ru-RU')} 🎁</span>
-                </div>
-                <div class="bar-track">
-                    <div class="bar-fill" style="width: ${barWidth}%"></div>
-                </div>
-            `;
-            chartContainer.appendChild(barElement);
-        });
+function renderLeaderboard(players) {
+    if (!players || players.length === 0) {
+        chartContainer.innerHTML = '<div class="contest-loading">🎄 Таблица лидеров пока пуста!</div>';
+        return;
     }
+
+    const maxScore = Math.max(...players.map(p => p.baubles));
+    const topPlayers = players.slice(0, 15);
+
+    chartContainer.innerHTML = '';
+
+    topPlayers.forEach((player, index) => {
+        const barElement = document.createElement('div');
+        barElement.classList.add('contest-bar');
+        barElement.style.animationDelay = `${index * 0.15}s`; // Увеличим задержку для плавности
+
+        const barWidth = maxScore > 0 ? (player.baubles / maxScore) * 100 : 0;
+
+        barElement.innerHTML = `
+            <div class="contest-bar-info">
+                <span class="contest-bar-name">${player.first_name}</span>
+                <span class="contest-bar-score">${player.baubles.toLocaleString('ru-RU')} 🎁</span>
+            </div>
+            <div class="contest-bar-track">
+                <div class="contest-bar-fill" style="width: 0%;" data-width="${barWidth}%"></div>
+            </div>
+        `;
+        chartContainer.appendChild(barElement);
+    });
+
+    // Запускаем анимацию заливки ПОСЛЕ того, как все элементы появились
+    const totalDelay = 100 + (topPlayers.length * 150);
+    setTimeout(() => {
+        document.querySelectorAll('.contest-bar-fill').forEach(el => {
+            el.style.width = el.dataset.width;
+        });
+    }, totalDelay);
+}
 
     function updateLastUpdatedTime() {
         const now = new Date();
