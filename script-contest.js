@@ -1,3 +1,4 @@
+// !!! ВАЖНО: Замените этот URL на адрес вашего воркера !!!
 const API_URL = 'https://empty-bonus-537d.turishevkirill.workers.dev/stats';
 
 const chartContainer = document.getElementById('leaderboard-chart');
@@ -25,18 +26,14 @@ if (chartContainer) {
             return;
         }
 
-        // Находим максимальный счет для масштабирования столбиков
         const maxScore = Math.max(...players.map(p => p.baubles));
-
-        // Ограничиваем отображение топ-15 для лучшей читаемости
         const topPlayers = players.slice(0, 15);
 
-        chartContainer.innerHTML = ''; // Очищаем контейнер
+        chartContainer.innerHTML = '';
 
         topPlayers.forEach((player, index) => {
             const barElement = document.createElement('div');
             barElement.classList.add('bar');
-            // Добавляем задержку для анимации появления каждого следующего столбика
             barElement.style.animationDelay = `${index * 0.1}s`;
 
             const barWidth = maxScore > 0 ? (player.baubles / maxScore) * 100 : 0;
