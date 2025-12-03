@@ -1076,34 +1076,37 @@ button:disabled {
   width: 100%;
   max-width: 700px;
   margin: 40px auto;
-  background: linear-gradient(145deg, #1e1e1e, #2a2a2a); /* Как у post-container */
-  border-radius: 12px; /* Как у post-container */
+  /* Эффект "стекломорфизма" */
+  background: rgba(30, 30, 46, 0.7);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-radius: 20px;
   padding: 30px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Как у post-container */
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   position: relative;
   overflow: hidden;
-  border-left: 4px solid #3d85c6; /* Акцентный цвет, как у постов */
 }
 
 .contest-widget-header {
   text-align: center;
   margin-bottom: 25px;
-  border-bottom: 1px solid #444; /* Разделитель, как у вас */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding-bottom: 20px;
 }
 
 .contest-widget-header h1 {
-  font-family: Impact, sans-serif; /* Ваш шрифт для заголовков */
+  font-family: Impact, sans-serif;
   font-size: 2.5rem;
   margin: 0;
-  color: #3d85c6; /* Ваш цвет заголовков */
-  text-shadow: 0 0 10px rgba(61, 133, 198, 0.3); /* Как у .header */
-  padding-top: 0; /* Сбрасываем стандартный padding */
+  color: #3d85c6;
+  text-shadow: 0 0 15px rgba(61, 133, 198, 0.5);
+  padding-top: 0;
 }
 
 .contest-widget-subtitle {
   font-size: 1rem;
-  color: #b7b7b7; /* Ваш цвет для мета-информации */
+  color: #b7b7b7;
   margin: 5px 0 0 0;
 }
 
@@ -1112,16 +1115,13 @@ button:disabled {
 }
 
 .contest-bar {
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   opacity: 0;
-  animation: fadeInUpContest 0.5s ease forwards; /* Ваша анимация fadeInUp */
+  transform: translateY(30px);
+  animation: fadeInUpContest 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
-@keyframes fadeInUpContest { /* Переименованная анимация для избежания конфликтов */
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
+@keyframes fadeInUpContest {
   to {
     opacity: 1;
     transform: translateY(0);
@@ -1131,52 +1131,73 @@ button:disabled {
 .contest-bar-info {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 8px;
-  font-size: 0.9rem;
-  color: #ffffff; /* Основной цвет текста */
+  margin-bottom: 10px;
+  font-size: 1rem;
+  color: #ffffff;
+  font-weight: 500;
 }
 
 .contest-bar-name {
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .contest-bar-score {
   font-weight: 700;
-  color: #fbbf24; /* Золотой цвет для очков, хороший акцент */
+  color: #fbbf24;
+  text-shadow: 0 0 8px rgba(251, 191, 36, 0.7);
 }
 
 .contest-bar-track {
   width: 100%;
-  height: 24px;
-  background-color: rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
+  height: 28px; /* Сделаем столбики чуть толще */
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 14px;
   overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 .contest-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, #fbbf24, #f59e0b);
-  border-radius: 12px;
   width: 0%;
-  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+  border-radius: 14px;
+  transition: width 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
 }
 
-/* Особые стили для топ-3 */
-.contest-bar:nth-child(1) .contest-bar-fill { background: linear-gradient(90deg, #ffd700, #ffed4e); } /* Золото */
-.contest-bar:nth-child(2) .contest-bar-fill { background: linear-gradient(90deg, #c0c0c0, #e8e8e8); } /* Серебро */
-.contest-bar:nth-child(3) .contest-bar-fill { background: linear-gradient(90deg, #cd7f32, #e4a853); } /* Бронза */
-
-.contest-last-updated {
-  text-align: center;
-  font-size: 0.8rem;
-  color: #888; /* Цвет для второстепенного текста */
-  margin-top: 15px;
+/* Волшебный эффект "блика" на столбиках */
+.contest-bar-fill::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  animation: shimmer 2.5s infinite;
 }
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  20%, 100% { left: 150%; }
+}
+
+/* Градиенты для топ-3 и остальных */
+.contest-bar:nth-child(1) .contest-bar-fill { background: linear-gradient(90deg, #FFD700, #FFA500); box-shadow: 0 0 25px rgba(255, 215, 0, 0.7), 0 0 40px rgba(255, 215, 0, 0.4); }
+.contest-bar:nth-child(2) .contest-bar-fill { background: linear-gradient(90deg, #C0C0C0, #808080); box-shadow: 0 0 20px rgba(192, 192, 192, 0.6); }
+.contest-bar:nth-child(3) .contest-bar-fill { background: linear-gradient(90deg, #CD7F32, #8B4513); box-shadow: 0 0 20px rgba(205, 127, 50, 0.6); }
+.contest-bar:nth-child(n+4) .contest-bar-fill { background: linear-gradient(90deg, #3d85c6, #015394); box-shadow: 0 0 15px rgba(61, 133, 198, 0.5); }
 
 .contest-loading {
   text-align: center;
   font-size: 1.2rem;
   padding: 40px;
-  color: #aaa; /* Цвет для индикатора загрузки */
+  color: #aaa;
 }
