@@ -3,167 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Статистика Новогодней Фермы</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Impact&display=swap" rel="stylesheet">
+    <title>M5wiki | Статистика Новогодней Фермы</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="image/m5wiki.png" type="image/png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
-        /* --- ПОЛНЫЙ CSS-КОД ДЛЯ ВИДЖЕТА --- */
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
 
         body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            background-color: #000000;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+          margin: 0;
+          padding: 0;
+          width: 100%;
+          background-color: #000000;
+          color: #ffffff;
+          font-family: Arial, sans-serif;
         }
 
-        .contest-leaderboard-widget {
-            width: 100%;
+        .page-wrapper {
+            padding: 0 60px;
             max-width: 800px;
-            margin: 40px auto;
-            background: rgba(10, 10, 20, 0.8);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            position: relative;
-            overflow: visible;
+            margin: 0 auto;
         }
 
-        .contest-widget-header {
-            text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 20px;
+        .header {
+          text-align: center;
+          color: #3d85c6;
+          font-size: 34px;
+          margin: 20px 0;
+          font-family: Impact, sans-serif;
+          text-shadow: 0 0 10px rgba(61, 133, 198, 0.3);
         }
 
-        .contest-widget-header h1 {
-            font-family: Impact, sans-serif;
-            font-size: 2.8rem;
-            margin: 0;
-            color: #ffffff;
-            text-shadow: 0 0 20px rgba(61, 133, 198, 0.7);
-            padding-top: 0;
+        #leaderboard-list {
+            display: flex;
+            flex-direction: column;
         }
 
-        .contest-widget-subtitle {
-            font-size: 1rem;
-            color: #b7b7b7;
-            margin: 5px 0 0 0;
+        .post-container {
+          margin-bottom: 1.5em;
+          padding: 20px;
+          border: 1px solid #333;
+          border-radius: 12px;
+          background: linear-gradient(145deg, #1e1e1e, #2a2a2a);
+          position: relative;
+          overflow: hidden;
+
+          /* Плавная анимация перемещения */
+          transition:
+              box-shadow 0.5s ease;
         }
 
-        .contest-chart-container {
-            padding: 10px 0;
+        .post-container::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 4px;
+          height: 100%;
+          background: linear-gradient(to bottom, #3d85c6, #2a5a8a);
+          border-radius: 4px 0 0 4px;
         }
 
-        .contest-bar {
-            margin-bottom: 35px;
-            opacity: 0;
-            transform: translateY(40px);
-            animation: fadeInUpContest 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        .post-container[data-rank="1"] {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3),
+                        0 0 20px rgba(255, 215, 0, 0.3);
+        }
+        .post-container[data-rank="2"] {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3),
+                        0 0 20px rgba(192, 192, 192, 0.25);
+        }
+        .post-container[data-rank="3"] {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3),
+                        0 0 20px rgba(205, 127, 50, 0.25);
         }
 
-        @keyframes fadeInUpContest {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .contest-bar-info {
+        .player-info {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .player-name {
+            font-weight: 800;
+        }
+
+        .player-score {
             color: #ffffff;
-            font-weight: 600;
             text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
-        .contest-bar-name {
-            font-weight: 800;
-            letter-spacing: 0.5px;
-        }
-
-        .contest-bar-score {
-            font-weight: 800;
-            color: #fbbf24;
-            text-shadow: 0 0 10px rgba(251, 191, 36, 0.8);
-        }
-
-        .contest-bar-track {
+        .bar-track {
             width: 100%;
-            height: 35px;
-            background-color: rgba(0, 0, 0, 0.4);
-            border-radius: 8px;
-            position: relative;
-            box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.7);
+            height: 25px;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            overflow: hidden;
         }
 
-        .contest-bar-fill {
+        .bar-fill {
             height: 100%;
             width: 0%;
-            border-radius: 8px;
-            transition: width 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            position: relative;
-            box-shadow: -8px 8px 0 #0a0a14;
-        }
+            border-radius: 12px;
 
-        .contest-bar-fill::before {
-            content: '';
-            position: absolute;
-            top: -8px;
-            left: 0;
-            width: 100%;
-            height: 35px;
-            border-radius: 8px 8px 0 0;
-            background: inherit;
-            filter: brightness(1.2);
-            transform: skewY(-5deg);
-            transform-origin: bottom left;
-        }
+            /* Более мягкая анимация */
+            transition: width 1.4s cubic-bezier(0.25, 0.1, 0.25, 1);
 
-        .contest-bar:nth-child(1) .contest-bar-fill {
-            background: linear-gradient(90deg, #FFD700, #FFA500);
-            box-shadow: -8px 8px 0 #cc8800, 0 0 30px rgba(255, 215, 0, 0.8), 0 0 60px rgba(255, 215, 0, 0.4);
-            animation: pulse-gold 2s infinite;
-        }
-        .contest-bar:nth-child(2) .contest-bar-fill {
-            background: linear-gradient(90deg, #C0C0C0, #808080);
-            box-shadow: -8px 8px 0 #606060, 0 0 25px rgba(192, 192, 192, 0.7);
-        }
-        .contest-bar:nth-child(3) .contest-bar-fill {
-            background: linear-gradient(90deg, #CD7F32, #8B4513);
-            box-shadow: -8px 8px 0 #6b3410, 0 0 25px rgba(205, 127, 50, 0.7);
-        }
-        .contest-bar:nth-child(n+4) .contest-bar-fill {
+            box-shadow: 0 0 15px rgba(61, 133, 198, 0.6);
             background: linear-gradient(90deg, #4a90e2, #0a4d8f);
-            box-shadow: -8px 8px 0 #063060;
         }
 
-        @keyframes pulse-gold {
-            0%, 100% { box-shadow: -8px 8px 0 #cc8800, 0 0 30px rgba(255, 215, 0, 0.8), 0 0 60px rgba(255, 215, 0, 0.4); }
-            50% { box-shadow: -8px 8px 0 #cc8800, 0 0 40px rgba(255, 215, 0, 1), 0 0 80px rgba(255, 215, 0, 0.6); }
+        .post-container[data-rank="1"] .bar-fill {
+            background: linear-gradient(90deg, #FFD700, #FFA500);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+        }
+        .post-container[data-rank="2"] .bar-fill {
+            background: linear-gradient(90deg, #C0C0C0, #808080);
+            box-shadow: 0 0 18px rgba(192, 192, 192, 0.7);
+        }
+        .post-container[data-rank="3"] .bar-fill {
+            background: linear-gradient(90deg, #CD7F32, #8B4513);
+            box-shadow: 0 0 18px rgba(205, 127, 50, 0.7);
         }
 
-        .contest-loading {
-            text-align: center;
-            font-size: 1.2rem;
-            padding: 40px;
-            color: #aaa;
+        .loading-container {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 60px 20px;
+          min-height: 200px;
+        }
+
+        .loading-text {
+          font-size: 18px;
+          color: #888;
+          text-align: center;
         }
     </style>
 </head>
@@ -174,92 +155,143 @@
   <div id="sidebar-placeholder"></div>
 <body>
 
-    <div class="contest-leaderboard-widget">
-        <div class="contest-widget-header">
-            <h1>🎄 Новогодняя Ферма</h1>
-            <p class="contest-widget-subtitle">Лайв-статистика конкурса</p>
-        </div>
-        <div class="contest-chart-container" id="leaderboard-chart">
-            <div class="contest-loading">Загрузка статистики... ⏳</div>
+    <div class="page-wrapper">
+        <h1 class="header">🎄 Новогодняя Ферма</h1>
+
+        <div id="leaderboard-list">
+            <div class="loading-container">
+                <div class="loading-text">Загрузка статистики...</div>
+            </div>
         </div>
     </div>
 
-    <script>
-        // --- ПОЛНЫЙ JAVASCRIPT-КОД ДЛЯ ВИДЖЕТА ---
-
-        // !!! ВАЖНО: ЗАМЕНИТЕ ЭТОТ URL НА АДРЕС ВАШЕГО ВОРКЕРА !!!
-        const API_URL = 'https://empty-bonus-537d.turishevkirill.workers.dev/stats';
-
-        const chartContainer = document.getElementById('leaderboard-chart');
-
-        if (chartContainer) {
-            async function fetchLeaderboard() {
-                try {
-                    const response = await fetch(API_URL);
-                    if (!response.ok) {
-                        throw new Error(`Ошибка сети: ${response.statusText}`);
-                    }
-                    const players = await response.json();
-                    renderLeaderboard(players);
-                } catch (error) {
-                    console.error("Не удалось получить статистику:", error);
-                    chartContainer.innerHTML = '<div class="contest-loading">😵 Не удалось загрузить статистику.</div>';
-                }
-            }
-
-            function renderLeaderboard(players) {
-                if (!players || players.length === 0) {
-                    chartContainer.innerHTML = '<div class="contest-loading">🎄 Таблица лидеров пока пуста!</div>';
-                    return;
-                }
-
-                const maxScore = Math.max(...players.map(p => p.baubles));
-                const topPlayers = players.slice(0, 15);
-
-                chartContainer.innerHTML = '';
-
-                topPlayers.forEach((player, index) => {
-                    const barElement = document.createElement('div');
-                    barElement.classList.add('contest-bar');
-                    barElement.style.animationDelay = `${index * 0.15}s`;
-
-                    const barWidth = maxScore > 0 ? (player.baubles / maxScore) * 100 : 0;
-
-                    barElement.innerHTML = `
-                        <div class="contest-bar-info">
-                            <span class="contest-bar-name">${player.first_name}</span>
-                            <span class="contest-bar-score">${player.baubles.toLocaleString('ru-RU')} 🎁</span>
-                        </div>
-                        <div class="contest-bar-track">
-                            <div class="contest-bar-fill" style="width: 0%;" data-width="${barWidth}%"></div>
-                        </div>
-                    `;
-                    chartContainer.appendChild(barElement);
-                });
-
-                const totalDelay = 100 + (topPlayers.length * 150);
-                setTimeout(() => {
-                    document.querySelectorAll('.contest-bar-fill').forEach(el => {
-                        el.style.width = el.dataset.width;
-                    });
-                }, totalDelay);
-            }
-
-            // Загружаем статистику при загрузке страницы
-            document.addEventListener('DOMContentLoaded', fetchLeaderboard);
-
-            // Обновляем статистику каждые 30 секунд
-            setInterval(fetchLeaderboard, 30000);
-
-        } else {
-            console.error("Контейнер для таблицы лидеров #leaderboard-chart не найден на странице.");
-        }
-    </script>
 <script>
-    window.SHOW_BANNER = '8';
+const API_URL = 'https://empty-bonus-537d.turishevkirill.workers.dev/stats';
+const listContainer = document.getElementById('leaderboard-list');
+const playerElementsMap = new Map();
+let isFirstRender = true;
+
+if (listContainer) {
+
+    async function fetchLeaderboard() {
+        try {
+            const response = await fetch(API_URL);
+            if (!response.ok) throw new Error(`Ошибка сети: ${response.statusText}`);
+            const players = await response.json();
+            renderLeaderboard(players);
+        } catch (error) {
+            listContainer.innerHTML =
+                '<div class="loading-container"><div class="loading-text">😵 Не удалось загрузить статистику.</div></div>';
+            playerElementsMap.clear();
+            isFirstRender = true;
+        }
+    }
+
+    function renderLeaderboard(newPlayers) {
+        if (!newPlayers || newPlayers.length === 0) {
+            listContainer.innerHTML =
+                '<div class="loading-container"><div class="loading-text">🎄 Таблица лидеров пока пуста!</div></div>';
+            playerElementsMap.clear();
+            isFirstRender = true;
+            return;
+        }
+
+        if (isFirstRender) {
+            listContainer.innerHTML = '';
+            isFirstRender = false;
+        }
+
+        const maxScore = Math.max(...newPlayers.map(p => p.baubles));
+        const topPlayers = newPlayers.slice(0, 15);
+        const currentTopIds = new Set(topPlayers.map(p => p.user_id));
+
+        // ----------- FLIP: First - фиксируем старые позиции -----------
+        // Временно отключаем transition, чтобы он не мешал измерению
+        playerElementsMap.forEach(el => el.style.transition = 'none');
+        const firstRects = new Map();
+        playerElementsMap.forEach((el, id) => {
+            firstRects.set(id, el.getBoundingClientRect());
+        });
+
+        // ----------- Обновление/создание элементов (Invert) -----------
+        topPlayers.forEach((player, index) => {
+            const rank = index + 1;
+            const barWidth = maxScore > 0 ? (player.baubles / maxScore) * 100 : 0;
+
+            let el = playerElementsMap.get(player.user_id);
+
+            if (!el) {
+                el = document.createElement('div');
+                el.classList.add('post-container');
+                el.dataset.userId = player.user_id;
+
+                el.innerHTML = `
+                    <div class="player-info">
+                        <span class="player-name"></span>
+                        <span class="player-score"></span>
+                    </div>
+                    <div class="bar-track">
+                        <div class="bar-fill"></div>
+                    </div>
+                `;
+
+                listContainer.appendChild(el);
+                playerElementsMap.set(player.user_id, el);
+            }
+
+            el.dataset.rank = rank;
+            el.style.order = rank;
+            el.querySelector('.player-name').textContent = `${rank}. ${player.first_name}`;
+            el.querySelector('.player-score').textContent =
+                `${player.baubles.toLocaleString('ru-RU')} ❄️`;
+            el.querySelector('.bar-fill').style.width = `${barWidth}%`;
+        });
+
+        // ----------- FLIP: Last и Play - анимация перемещения -----------
+        const lastRects = new Map();
+        playerElementsMap.forEach((el, id) => {
+            lastRects.set(id, el.getBoundingClientRect());
+        });
+
+        playerElementsMap.forEach((el, id) => {
+            // Возвращаем transition, чтобы анимация сработала
+            el.style.transition = '';
+
+            const first = firstRects.get(id);
+            const last = lastRects.get(id);
+
+            if (first && last) {
+                const dx = first.left - last.left;
+                const dy = first.top - last.top;
+
+                if (dx || dy) {
+                    el.style.transform = `translate(${dx}px, ${dy}px)`;
+                    // В следующем кадре убираем transform, и CSS transition плавно возвращает элемент на место
+                    requestAnimationFrame(() => {
+                        el.style.transform = '';
+                    });
+                }
+            }
+        });
+
+        // ----------- Удаление тех, кто вышел из топа -----------
+        for (const [id, el] of playerElementsMap.entries()) {
+            if (!currentTopIds.has(id)) {
+                el.remove();
+                playerElementsMap.delete(id);
+            }
+        }
+    }
+
+    fetchLeaderboard();
+    setInterval(fetchLeaderboard, 30000);
+}
+</script>
+  <script>
+    window.SHOW_BANNER = '0';
 </script>
 <script src="banner-system.js"></script>
-  <script src="script.js"></script>
-  <script src="snow.js"></script>
+<script src="script.js"></script>
+<script src="snow.js"></script>
 </body>
 </html>
