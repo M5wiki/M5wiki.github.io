@@ -1,8 +1,12 @@
-# M5wiki.github.io
-## Лицензия
+test
+test1
+test
+test1
 
-Этот проект лицензирован по лицензии Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+test
+test1
 
-![License: CC BY-NC-SA 4.0](https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png)
+test
+test1
 
-Полный текст лицензии доступен в файле [LICENSE](LICENSE).
+
