@@ -8,6 +8,14 @@ var tftHeight = display.height();
 
 var request = { body: '' };
 
+/**
+ * Draws the window frame and header, clears the display, and shows a "loading..." indicator.
+ *
+ * The title is centered at the top and will be truncated to 20 characters if longer.
+ * A rounded rectangle is drawn as the window border and the display is cleared before drawing.
+ *
+ * @param {string} title - The window title to display (truncated to 20 characters if longer).
+ */
 function drawWindow(title) {
   display.fill(0);
   display.drawRoundRect(
@@ -40,6 +48,14 @@ var textViewer = dialog.createTextViewer(request.body, {
 
 var history = [];
 
+/**
+ * Load the given webpage, convert it to plain text, and display it in the window and text viewer.
+ *
+ * Fetches a text representation of the page for the provided URL, updates the global request body,
+ * pushes the URL onto navigation history, and refreshes the on-screen viewer. On fetch error,
+ * the request body is set to the string "error\n\n".
+ * @param {string} url - The full URL to load (including scheme, e.g. "https://example.com").
+ */
 function goToPage(url) {
   console.log(url);
   drawWindow(url.substring(url.indexOf('://') + 3));
@@ -71,6 +87,13 @@ var websites = [
   // вставляйте сюда сайты
 ];
 
+/**
+ * Show a dialog letting the user pick one of the configured websites, "Cancel", or "Quit".
+ *
+ * The dialog labels each website by its host (URL without the scheme). If a request is active,
+ * a "Cancel" option is included. A "Quit" option is always included.
+ * @returns {string} The full URL selected from the websites list, or the string "Cancel", or the string "Quit".
+ */
 function selectWebsite() {
   drawWindow('Select Website');
   var websitesChoice = {};
@@ -85,6 +108,12 @@ function selectWebsite() {
   return dialog.choice(websitesChoice);
 }
 
+/**
+ * Build a selectable index of non-indented lines from the current text view and prompt the user to pick one.
+ * Populates a choice list with each non-empty, non-leading-space line mapped to its line index, adds a "Cancel" option,
+ * and shows a dialog for selection.
+ * @returns {number} The chosen line index, or -1 if the user selected "Cancel".
+ */
 function selectSection() {
   var websitesSections = {};
   var getMaxLines = textViewer.getMaxLines();
@@ -99,6 +128,16 @@ function selectSection() {
   return choice === 'Cancel' ? -1 : parseInt(choice, 10);
 }
 
+/**
+ * Drive the interactive text-browser UI: prompt for a site, load pages, and handle user commands and navigation.
+ *
+ * Presents a website selector, loads the chosen page, and enters an event loop that responds to keyboard input:
+ * - Opens a choice dialog of visible links and actions (Go To Selection, Go Back, Select Website, Cancel, Quit).
+ * - Navigates to a selected link, which is extracted from the current page text when a numbered link option is chosen.
+ * - Supports jumping to a section, scrolling up/down, going back through history, switching sites, and quitting the application.
+ *
+ * The function performs UI updates and loads pages via goToPage(url); it returns control only when the user quits.
+ */
 function main() {
   var _a;
   var url = selectWebsite();
