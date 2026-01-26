@@ -50,3 +50,6 @@ javascript:
   - '**/*.ru.md'
   - '**/*.en.md'
   - '**/*.cn.md'
+
+"скрипт":
+  - 'scripts/**/*'
