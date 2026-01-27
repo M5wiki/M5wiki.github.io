@@ -82,6 +82,14 @@ li {
   list-style-type: square;
 }
 
+.under {
+  font-family: Arial, sans-serif;
+  font-size: 16pt;
+  color: #ffffff;
+  font-weight: bold;
+  margin: 20px 0;
+}
+
 .top-banner {
   width: 100%;
   overflow: hidden;
