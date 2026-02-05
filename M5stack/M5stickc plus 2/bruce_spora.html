@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Шпора на стике в прошивке Bruce</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="icon" href="/image/m5wiki.png" type="image/png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+
+<button id="menu-toggle" class="menu-button">
+  <img src="/image/m5wiki.png" alt="Меню M5Wiki" width="80%">
+</button>
+
+<div id="sidebar-placeholder"></div>
+
+<div class="page-wrapper">
+  <div class="content">
+    <h1>Как сделать шпору на стике в прошивке Bruce</h1>
+
+    <hr>
+    <h2>1. Вход на GitHub</h2>
+    <ul>
+      <li>Зайдите на <a href="https://github.com">https://github.com</a></li>
+      <li>Авторизуйтесь под своим аккаунтом</li>
+    </ul>
+
+    <hr>
+    <h2>2. Создание репозитория</h2>
+    <ul>
+      <li>Нажмите <b>+ → New repository</b></li>
+      <li>Заполните:
+        <ul>
+          <li><b>Repository name</b> — любое</li>
+          <li><b>Description</b> — по желанию</li>
+          <li><b>Visibility</b> — Public</li>
+        </ul>
+      </li>
+      <li>Включите <b>Add README</b></li>
+      <li>Нажмите <b>Create repository</b></li>
+    </ul>
+
+    <hr>
+    <h2>3. Добавление файла</h2>
+    <ul>
+      <li>Измените <code>README</code> или добавьте новый файл</li>
+      <li>Обязательно используйте расширение <code>.txt</code> или <code>.html</code></li>
+    </ul>
+
+    <hr>
+    <h2>4. Сохранение</h2>
+    <ul>
+      <li>Впишите содержимое</li>
+      <li>Добавьте комментарий к коммиту</li>
+      <li>Нажмите <b>Commit changes</b></li>
+    </ul>
+
+    <hr>
+    <h2>5. Преобразование ссылки</h2>
+    <p>Скопированная ссылка:</p>
+    <pre>https://github.com/Fynex-x/test.git</pre>
+
+    <p>Формат raw-ссылки:</p>
+    <pre>https://raw.githubusercontent.com/ИМЯ_ПОЛЬЗОВАТЕЛЯ/ИМЯ_РЕПОЗИТОРИЯ/ИМЯ_ВЕТКИ/ПУТЬ_К_ФАЙЛУ</pre>
+
+    <p>Пример:</p>
+    <pre>https://raw.githubusercontent.com/Fynex-x/test/main/README.md</pre>
+
+    <hr>
+    <h2>6. Использование в скрипте</h2>
+    <p>Скачайте скрипт <code>browser_bruse.js</code> и откройте его для редактирования.</p>
+    <pre><code>var website = [
+    "https://raw.githubusercontent.com/Fynex-x/test/main/README.md",
+    "https://raw.githubusercontent.com/Fynex-x/test/main/README.txt"
+];</code></pre>
+
+    <hr>
+    <h3>Примечание</h3>
+    <p>Прошивка Bruce не поддерживает русские символы</p>
+
+  </div>
+</div>
+
+<div id="footer-placeholder"></div>
+
+<script>
+  window.SHOW_BANNER = '0';
+</script>
+<script src="/banner-system.js"></script>
+<script src="/script.js"></script>
+<script src="/snow.js"></script>
+
+</body>
+  </html>
